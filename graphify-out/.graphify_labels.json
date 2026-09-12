@@ -1,13 +1,14 @@
 {
   "0": "main.js",
-  "1": "UI State Management",
+  "1": "handsDetector.reference.js",
   "2": "recognizer.js",
-  "3": "inputShape.js",
-  "4": "SequenceBuffer",
+  "3": "heuristicRules.reference.js",
+  "4": "gruCtcStreamingRecognizer.reference.js",
   "5": "package.json",
   "6": "Reglas de desarrollo de AulaSenas2",
-  "7": "CameraController",
-  "8": "SignRecognizer",
+  "7": "normalizer.reference.js",
+  "8": "gruCtcModelLoader.reference.js",
   "9": "LandmarkExtractor",
-  "10": "MediaPipeAdapter"
+  "10": "handsConfig.reference.js",
+  "11": "INTEGRACION_RECONOCIMIENTO.md"
 }

@@ -1,43 +1,44 @@
-# Graph Report - AulaSenas2  (2026-09-11)
+# Graph Report - AulaSenas2  (2026-09-12)
 
 ## Corpus Check
-- 40 files · ~14,217 words
+- 47 files · ~25,602 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 105 nodes · 138 edges · 11 communities (6 shown, 5 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.8)
+- 284 nodes · 483 edges · 12 communities (9 shown, 3 thin omitted)
+- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 15 edges (avg confidence: 0.82)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c04d8b6c`
+- Built from commit: `713cc9a7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - main.js
-- UI State Management
+- handsDetector.reference.js
 - recognizer.js
-- inputShape.js
-- SequenceBuffer
+- heuristicRules.reference.js
+- gruCtcStreamingRecognizer.reference.js
 - package.json
 - Reglas de desarrollo de AulaSenas2
-- CameraController
-- SignRecognizer
+- normalizer.reference.js
+- gruCtcModelLoader.reference.js
 - LandmarkExtractor
-- MediaPipeAdapter
+- handsConfig.reference.js
+- INTEGRACION_RECONOCIMIENTO.md
 
 ## God Nodes (most connected - your core abstractions)
-1. `UserInterface` - 10 edges
-2. `Reglas de desarrollo de AulaSenas2` - 8 edges
-3. `SequenceBuffer` - 8 edges
-4. `MediaPipeAdapter` - 6 edges
-5. `UserPreferences` - 6 edges
-6. `CameraController` - 6 edges
-7. `SignRecognizer` - 6 edges
-8. `ModelLoader` - 5 edges
-9. `SpeechService` - 4 edges
-10. `InferenceAdapter` - 4 edges
+1. `normalizarLandmarksMano()` - 14 edges
+2. `ejecutarFotograma()` - 12 edges
+3. `onResults()` - 11 edges
+4. `procesarFotograma()` - 10 edges
+5. `UserInterface` - 10 edges
+6. `procesarFotogramaManos()` - 9 edges
+7. `extraerColeccionLandmarksManos()` - 9 edges
+8. `normalizarPuntoEspacial()` - 8 edges
+9. `SequenceBuffer` - 8 edges
+10. `Reglas de desarrollo de AulaSenas2` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -45,23 +46,27 @@
 ## Import Cycles
 - None detected.
 
-## Communities (11 total, 5 thin omitted)
+## Communities (12 total, 3 thin omitted)
 
 ### Community 0 - "main.js"
-Cohesion: 0.11
-Nodes (8): UserPreferences, preferences, speech, translator, ui, ModelLoader, SpeechService, Translator
+Cohesion: 0.05
+Nodes (16): UserPreferences, camera, loader, preferences, recognizer, speech, translator, ui (+8 more)
 
-### Community 1 - "UI State Management"
-Cohesion: 0.21
-Nodes (4): loader, recognizer, vision, UserInterface
+### Community 1 - "handsDetector.reference.js"
+Cohesion: 0.06
+Nodes (55): abstraerPuntosClaveMano(), actualizarDiagnosticoResultadosManos(), calcularDistanciaPuntosMano(), configuracionExclusionMargenesCamara, configurarMaximoManosDetector(), construirBanderasExclusionDatos(), construirRepresentacionCanonicaManos(), construirSlotCanonicoMano() (+47 more)
 
 ### Community 2 - "recognizer.js"
-Cohesion: 0.35
-Nodes (5): acceptPrediction(), confidenceFromLogits(), greedyCtcDecode(), appendDeltaMsNorm(), normalizeLandmarks()
+Cohesion: 0.11
+Nodes (12): acceptPrediction(), confidenceFromLogits(), greedyCtcDecode(), InferenceAdapter, FRAME_FEATURES, LANDMARK_FEATURES, TEMPORAL_LENGTH, validateTemporalInput() (+4 more)
 
-### Community 3 - "inputShape.js"
-Cohesion: 0.27
-Nodes (5): InferenceAdapter, FRAME_FEATURES, LANDMARK_FEATURES, TEMPORAL_LENGTH, validateTemporalInput()
+### Community 3 - "heuristicRules.reference.js"
+Cohesion: 0.08
+Nodes (31): abstraerPuntoClaveMano(), abstraerPuntosClaveMano(), afirmarColeccionLandmarksTemplate(), afirmarCoordenadasPuntoTemplate(), afirmarFramesTemporalesCapturaFija(), afirmarIndicePuntoTemplate(), afirmarNombrePuntoTemplate(), afirmarPresenciaExplicitaPuntosTemplate() (+23 more)
+
+### Community 4 - "gruCtcStreamingRecognizer.reference.js"
+Cohesion: 0.17
+Nodes (29): ahoraMonotonoMs(), aplicarFronteraAusenciaEstable(), cancelarCola(), classIdDesdeEtiqueta(), construirEntrada308(), construirVisual307(), copiarConteos(), detener() (+21 more)
 
 ### Community 5 - "package.json"
 Cohesion: 0.25
@@ -71,21 +76,29 @@ Nodes (7): name, private, scripts, check, test, type, version
 Cohesion: 0.22
 Nodes (8): Aplicaciones, Dependencias, Forma de trabajo, graphify, Prohibiciones, Regla principal, Reglas de desarrollo de AulaSenas2, Ubicación obligatoria
 
+### Community 7 - "normalizer.reference.js"
+Cohesion: 0.18
+Nodes (26): aplanarLandmarksAVector63(), calcularDistanciaEuclidiana3D(), calcularEscalaFallback(), calcularEscalaMano(), calcularFactorEscalaPalma(), calcularMagnitud3D(), calcularPromedio(), configuracionNormalizacionMano (+18 more)
+
+### Community 8 - "gruCtcModelLoader.reference.js"
+Cohesion: 0.22
+Nodes (11): cargar(), cargarJson(), cargarRecursos(), configurar(), copiar(), notificar(), obtenerEstado(), resolverUrl() (+3 more)
+
 ## Knowledge Gaps
-- **19 isolated node(s):** `Regla principal`, `Aplicaciones`, `Ubicación obligatoria`, `Dependencias`, `Prohibiciones` (+14 more)
+- **37 isolated node(s):** `Integración de reconocimiento GRU/CTC`, `ui`, `preferences`, `speech`, `translator` (+32 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `SequenceBuffer` connect `SequenceBuffer` to `recognizer.js`?**
-  _High betweenness centrality (0.080) - this node is a cross-community bridge._
-- **Why does `UserInterface` connect `UI State Management` to `main.js`?**
-  _High betweenness centrality (0.080) - this node is a cross-community bridge._
-- **Why does `MediaPipeAdapter` connect `MediaPipeAdapter` to `main.js`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **What connects `Regla principal`, `Aplicaciones`, `Ubicación obligatoria` to the rest of the system?**
-  _19 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `Integración de reconocimiento GRU/CTC`, `ui`, `preferences` to the rest of the system?**
+  _37 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `main.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1067193675889328 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05224963715529753 - nodes in this community are weakly interconnected._
+- **Should `handsDetector.reference.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.059562841530054644 - nodes in this community are weakly interconnected._
+- **Should `recognizer.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.10804597701149425 - nodes in this community are weakly interconnected._
+- **Should `heuristicRules.reference.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.08461538461538462 - nodes in this community are weakly interconnected._

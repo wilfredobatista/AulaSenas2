@@ -24,10 +24,10 @@
     "semantic_hash": "8fe6240e63519f3256dd807f55f2d8a1"
   },
   "apps/usuario/src/main.js": {
-    "mtime": 1789181620.44858,
-    "seen": 1789181952.288007,
-    "ast_hash": "eeb86d2f3792dff991e02d6d230f3536",
-    "semantic_hash": "eeb86d2f3792dff991e02d6d230f3536"
+    "mtime": 1789190304.4815361,
+    "seen": 1789191097.8466778,
+    "ast_hash": "23c68aa3f75e70f3835744dcdfa35a2a",
+    "semantic_hash": ""
   },
   "apps/usuario/src/reconocimiento/confidence.js": {
     "mtime": 1789181555.6430192,
@@ -90,10 +90,10 @@
     "semantic_hash": "b0d13c866c57ececa3ba4305b4e8f165"
   },
   "apps/usuario/src/video/camera.js": {
-    "mtime": 1789178240.8505921,
-    "seen": 1789181952.2880752,
-    "ast_hash": "642b4c4efdfc1311b92a36e830be2535",
-    "semantic_hash": "642b4c4efdfc1311b92a36e830be2535"
+    "mtime": 1789190301.416525,
+    "seen": 1789191097.8467524,
+    "ast_hash": "29c3a80499afdde82eb4ef9356694b81",
+    "semantic_hash": ""
   },
   "apps/usuario/src/vision/landmarks.js": {
     "mtime": 1789178247.7757032,
@@ -156,9 +156,9 @@
     "semantic_hash": ""
   },
   "apps/usuario/index.html": {
-    "mtime": 1789180718.1859105,
-    "seen": 1789182820.2402697,
-    "ast_hash": "7742c586658b67c97ef42c5b2bad39ff",
+    "mtime": 1789189173.5231905,
+    "seen": 1789191097.8468513,
+    "ast_hash": "e3fd5da21c7f9bb3e40cc96416a601d8",
     "semantic_hash": ""
   },
   "skills/comun.md": {
@@ -249,6 +249,54 @@
     "mtime": 1789170831.559866,
     "seen": 1789182820.2403483,
     "ast_hash": "421aeb0a8f7cb1a84dabccd0f7fb3ede",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/reconocimiento/gruCtcModelLoader.reference.js": {
+    "mtime": 1788931753.4046373,
+    "seen": 1789191097.8466954,
+    "ast_hash": "0bd553459d5e9155de3a296dbcf69284",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/reconocimiento/gruCtcStreamingRecognizer.reference.js": {
+    "mtime": 1788931159.1748905,
+    "seen": 1789191097.8467026,
+    "ast_hash": "cd21d12343c687893dac0f8bd54e4ff1",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/vision/handsConfig.reference.js": {
+    "mtime": 1781227582.6802542,
+    "seen": 1789191097.8467572,
+    "ast_hash": "88ed3515910078f2398864096b7fc533",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/vision/handsDetector.reference.js": {
+    "mtime": 1787673508.6317892,
+    "seen": 1789191097.8467612,
+    "ast_hash": "edac20dcd6422f4cf42e81b3e3630c58",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/vision/heuristicRules.reference.js": {
+    "mtime": 1781365033.7695339,
+    "seen": 1789191097.846766,
+    "ast_hash": "61ec033864a047aa6da5ab76de214b33",
+    "semantic_hash": ""
+  },
+  "apps/usuario/src/vision/normalizer.reference.js": {
+    "mtime": 1780017875.9613385,
+    "seen": 1789191097.8467882,
+    "ast_hash": "b6e0ad918c857d750b429c5411a895c0",
+    "semantic_hash": ""
+  },
+  "apps/usuario/INTEGRACION_RECONOCIMIENTO.md": {
+    "mtime": 1789186713.60983,
+    "seen": 1789191097.8468454,
+    "ast_hash": "97bd98a92cd3345c005f6f1d7891bbbf",
+    "semantic_hash": ""
+  },
+  "codemap_output/codemap.html": {
+    "mtime": 1789187638.4855402,
+    "seen": 1789191097.846856,
+    "ast_hash": "be2cdc090388c964a0f4e4ad00bd3bc8",
     "semantic_hash": ""
   }
 }
