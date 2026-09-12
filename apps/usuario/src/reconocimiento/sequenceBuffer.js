@@ -1,3 +1,4 @@
+/** Ventana FIFO temporal: conserva exactamente 32 vectores de 308 características. */
 export class SequenceBuffer {
   constructor({ length = 32, features = 308 } = {}) { if (!Number.isInteger(length) || length < 1) throw new Error('La longitud temporal debe ser positiva.'); this.length = length; this.features = features; this.frames = []; }
   push(frame) { validateFrame(frame, this.features); this.frames.push(Array.from(frame)); if (this.frames.length > this.length) this.frames.shift(); return this.ready; }

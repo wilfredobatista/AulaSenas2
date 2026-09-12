@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/gru-ctc-streaming-input.schema.json",
+  "title": "Entrada GRU/CTC streaming TensorFlow.js",
+  "description": "Contrato de inferencia de un paso del modelo exportado. frames_308 tiene forma runtime [1,1,308]; estado_gru tiene forma runtime [1,128]. El estado se inicializa en cero y se conserva entre frames.",
+  "type": "object",
+  "required": ["frames_308", "estado_gru"],
+  "properties": {
+    "frames_308": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 1,
+        "items": { "$ref": "gru-ctc-streaming-frame.schema.json" }
+      }
+    },
+    "estado_gru": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "array",
+        "items": { "type": "number" },
+        "minItems": 128,
+        "maxItems": 128
+      }
+    }
+  },
+  "additionalProperties": false
+}

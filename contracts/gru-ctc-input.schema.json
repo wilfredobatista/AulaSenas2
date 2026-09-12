@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/gru-ctc-input.schema.json",
+  "title": "Secuencia lógica opcional GRU/CTC",
+  "description": "Contrato lógico opcional para una ventana de 32 frames, aplicable a ventanas, datasets o pruebas. No es la forma de entrada del reconocedor streaming. Cada frame tiene 308 valores numéricos; la entrada streaming del modelo usa un frame a la vez con forma [1,1,308].",
+  "type": "array",
+  "minItems": 32,
+  "maxItems": 32,
+  "items": {
+    "type": "array",
+    "items": { "type": "number" },
+    "minItems": 308,
+    "maxItems": 308
+  }
+}

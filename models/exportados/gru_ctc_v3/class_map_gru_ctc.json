@@ -1,0 +1,56 @@
+{
+  "class_map_version": "aulasenas_gru_ctc_classes_v1",
+  "number_of_sign_classes": 11,
+  "number_of_outputs": 12,
+  "classes": [
+    {
+      "index": 0,
+      "label": "BIEN"
+    },
+    {
+      "index": 1,
+      "label": "BUENAS NOCHES"
+    },
+    {
+      "index": 2,
+      "label": "BUENAS TARDES"
+    },
+    {
+      "index": 3,
+      "label": "BUENOS DIAS"
+    },
+    {
+      "index": 4,
+      "label": "COMO ESTAS"
+    },
+    {
+      "index": 5,
+      "label": "CUAL ES TU NOMBRE"
+    },
+    {
+      "index": 6,
+      "label": "GRACIAS"
+    },
+    {
+      "index": 7,
+      "label": "HASTA MAÑANA"
+    },
+    {
+      "index": 8,
+      "label": "LO SIENTO"
+    },
+    {
+      "index": 9,
+      "label": "MI NOMBRE"
+    },
+    {
+      "index": 10,
+      "label": "PERMISO"
+    }
+  ],
+  "blank": {
+    "index": 11,
+    "label": "blank",
+    "internal_ctc_only": true
+  }
+}

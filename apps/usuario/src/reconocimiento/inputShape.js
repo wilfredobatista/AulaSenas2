@@ -1,3 +1,4 @@
+/** Contrato GRU/CTC de Usuario: 307 características visuales + deltaMsNorm. */
 export const TEMPORAL_LENGTH = 32;
 export const LANDMARK_FEATURES = 307;
 export const FRAME_FEATURES = 308;

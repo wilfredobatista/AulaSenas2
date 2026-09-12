@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/frame.schema.json",
+  "title": "Frame capturado",
+  "description": "Frame almacenado por CaptureSession. El timestamp se mide en milisegundos desde el inicio de la sesión.",
+  "type": "object",
+  "required": ["timestampMs", "landmarks"],
+  "properties": {
+    "timestampMs": { "type": "number", "minimum": 0 },
+    "landmarks": { "$ref": "landmarks.schema.json" }
+  },
+  "additionalProperties": true
+}

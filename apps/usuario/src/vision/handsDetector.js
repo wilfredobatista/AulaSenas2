@@ -1,3 +1,4 @@
+/* Detector autoritativo: recibe resultados de MediaPipe y publica frames normalizados por listeners globales. */
 const listenersLandmarksCrudos = [];
 const listenersFotogramasManos = [];
 const listenersExcepcionesManos = [];

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/sample-metadata.schema.json",
+  "title": "Metadatos y etiqueta de muestra",
+  "description": "Campos producidos por createSampleLabel. label es obligatorio; participant y notes se normalizan como cadenas y pueden estar vacíos.",
+  "type": "object",
+  "required": ["label", "participant", "notes"],
+  "properties": {
+    "label": { "type": "string", "minLength": 1 },
+    "participant": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": true
+}

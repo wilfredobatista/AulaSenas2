@@ -1,5 +1,7 @@
+/* Loader autoritativo de GraphModel: valida contrato, mapa de clases, nodos y estado GRU. */
 (function (global) {
-  const BASE_PATH_PREDETERMINADO = "ml_sennas_dinamicas_aulasenas_v3";
+  // Ruta única del modelo vigente; los artefactos permanecen fuera de Usuario.
+  const BASE_PATH_PREDETERMINADO = "/models/exportados/gru_ctc_v3";
   const EVENTO_ESTADO = "aulasenas:modelo-gru-ctc-estado";
   const estado = {
     disponible: false,

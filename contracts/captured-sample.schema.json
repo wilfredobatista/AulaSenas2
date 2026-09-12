@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/captured-sample.schema.json",
+  "title": "Muestra capturada",
+  "description": "Estructura observada antes de persistir una muestra y compatible con el registro guardado. La forma de landmarks sigue siendo externa.",
+  "type": "object",
+  "required": ["metadata", "frames"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "metadata": { "$ref": "sample-metadata.schema.json" },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "frame.schema.json" }
+    },
+    "capturedAt": { "type": "string", "format": "date-time" },
+    "stage": { "enum": ["raw", "processed", "validated"] }
+  },
+  "additionalProperties": true
+}

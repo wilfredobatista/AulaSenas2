@@ -1,3 +1,4 @@
+/* Reconocedor autoritativo streaming: construye 307/308, conserva estado [1,128] y decodifica CTC. */
 (function (global) {
   const EVENTO_PREDICCION_DINAMICA = "aulasenas:prediccion-dinamica";
   const EVENTO_ESTADO = "aulasenas:estado-reconocimiento-holistic";
@@ -344,6 +345,7 @@
       if (entrada.length !== FEATURES_MODELO || !entrada.every(Number.isFinite)) {
         throw new Error("La entrada GRU-CTC debe contener 308 valores finitos.");
       }
+      if (typeof global.validarEntradaStreaming === "function") global.validarEntradaStreaming({ frames_308: [[entrada]], estado_gru: [Array(UNIDADES_GRU).fill(0)] });
       const tf = global.tf;
       tensorFrame = tf.tensor3d(entrada, [1, 1, FEATURES_MODELO], "float32");
       tensorAnterior = estado.estadoTensor || tf.zeros([1, UNIDADES_GRU], "float32");

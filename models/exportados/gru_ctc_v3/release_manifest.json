@@ -1,0 +1,46 @@
+{
+  "release_version": "fase16_gru_ctc_tfjs_float32_v1",
+  "created_utc": "2026-09-09T01:33:13.551142+00:00",
+  "status": "approved_for_integration",
+  "source_streaming_model_sha256": "5b28dd6fa1c541739bdf09eda81707f91bacd67890193008a4b4c9187c187fcc",
+  "source_one_step_model_sha256": "3eeca9f12ecf476dc01df7470f5ed80b6b4f888a30e92eb2cfb7190ed3f2b510",
+  "converter": {
+    "tensorflowjs": "4.22.0",
+    "commit": "e5d5e9371ed1fd0a4df6d7cd0b947d2a820cefd7",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2"
+  },
+  "parity_report": "parity_report_tfjs.json",
+  "files": [
+    {
+      "file": "README_RUNTIME.md",
+      "size_bytes": 1088,
+      "sha256": "90d48c1e7559e83a61432d0bf73f3631e8979f8aeee7bb58dad4112b8b1557b2"
+    },
+    {
+      "file": "class_map_gru_ctc.json",
+      "size_bytes": 875,
+      "sha256": "2fe534fea19c5bad4ea90cfd8d514c7b5d8fedf1d0948c4a9764522f413e061b"
+    },
+    {
+      "file": "group1-shard1of1.bin",
+      "size_bytes": 560804,
+      "sha256": "22fcab2ebbac3753125951df34ad88d4d2faacaa1070a1287a5d0c20920175e1"
+    },
+    {
+      "file": "input_contract_gru_ctc_one_step_tfjs.json",
+      "size_bytes": 3146,
+      "sha256": "2a2703204c20e7db9171b0abc35e9e70659fcf1d979b8b20dda6ef3b316c707f"
+    },
+    {
+      "file": "model.json",
+      "size_bytes": 24607,
+      "sha256": "86663a3713c5e47dccca4e3f13896b83814701d0de1855375b3968b31abff2ec"
+    },
+    {
+      "file": "parity_report_tfjs.json",
+      "size_bytes": 408,
+      "sha256": "3b99ebe15f0f7071dc040efa67bb57d2479db247500e1ffa3eac72bd066f131f"
+    }
+  ]
+}

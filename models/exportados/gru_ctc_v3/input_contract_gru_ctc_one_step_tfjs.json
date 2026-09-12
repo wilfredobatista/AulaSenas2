@@ -1,0 +1,157 @@
+{
+  "contract_version": "aulasenas_gru_ctc_one_step_tfjs_v1",
+  "created_utc": "2026-09-09T01:33:13.508790+00:00",
+  "model": {
+    "format": "graph-model",
+    "precision": "float32",
+    "quantized": false,
+    "model_file": "model.json",
+    "weight_files": [
+      "group1-shard1of1.bin"
+    ],
+    "tensorflowjs_version": "4.22.0",
+    "recommended_load_api": "tf.loadGraphModel",
+    "recommended_execution_api": "model.execute"
+  },
+  "inputs": {
+    "frames_308": {
+      "logical_name": "frames_308",
+      "tensor_name": "frames_308:0",
+      "shape": [
+        null,
+        1,
+        308
+      ],
+      "runtime_shape": [
+        1,
+        1,
+        308
+      ],
+      "dtype": "float32"
+    },
+    "estado_gru": {
+      "logical_name": "estado_gru",
+      "tensor_name": "estado_gru:0",
+      "shape": [
+        null,
+        128
+      ],
+      "runtime_shape": [
+        1,
+        128
+      ],
+      "dtype": "float32",
+      "initial_value": 0.0
+    }
+  },
+  "outputs": {
+    "probabilidades_streaming": {
+      "logical_name": "probabilidades_streaming",
+      "tensor_name": "Identity_1:0",
+      "shape": [
+        null,
+        1,
+        12
+      ],
+      "runtime_shape": [
+        1,
+        1,
+        12
+      ],
+      "dtype": "float32"
+    },
+    "nuevo_estado_gru": {
+      "logical_name": "nuevo_estado_gru",
+      "tensor_name": "Identity:0",
+      "shape": [
+        null,
+        128
+      ],
+      "runtime_shape": [
+        1,
+        128
+      ],
+      "dtype": "float32"
+    }
+  },
+  "state_management": {
+    "type": "explicit",
+    "units": 128,
+    "initialize_with_zeros": true,
+    "preserve_between_frames": true,
+    "reset_controlled_by_application": true
+  },
+  "ctc": {
+    "blank_index": 11,
+    "number_of_sign_classes": 11,
+    "number_of_outputs": 12,
+    "decoder": "online_greedy",
+    "emit_when": "current_index != blank_index and current_index != previous_raw_index",
+    "track_blank_as_previous_index": true,
+    "probability_threshold": null
+  },
+  "features_per_frame": 308,
+  "feature_layout": [
+    {
+      "name": "mano_izquierda",
+      "start": 0,
+      "end_exclusive": 63,
+      "size": 63
+    },
+    {
+      "name": "mano_derecha",
+      "start": 63,
+      "end_exclusive": 126,
+      "size": 63
+    },
+    {
+      "name": "pose",
+      "start": 126,
+      "end_exclusive": 159,
+      "size": 33,
+      "landmarks_originales": [
+        0,
+        7,
+        8,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        23,
+        24
+      ]
+    },
+    {
+      "name": "rostro",
+      "start": 159,
+      "end_exclusive": 303,
+      "size": 144
+    },
+    {
+      "name": "presencia",
+      "start": 303,
+      "end_exclusive": 307,
+      "size": 4,
+      "order": [
+        "mano_izquierda",
+        "mano_derecha",
+        "pose",
+        "rostro"
+      ]
+    },
+    {
+      "name": "delta_temporal",
+      "start": 307,
+      "end_exclusive": 308,
+      "size": 1
+    }
+  ],
+  "delta_temporal": {
+    "formula": "max(timestamp_actual_ms - timestamp_anterior_ms, 0) / 100",
+    "scale_ms": 100.0,
+    "clamp": false,
+    "first_frame_value": 0.0
+  }
+}

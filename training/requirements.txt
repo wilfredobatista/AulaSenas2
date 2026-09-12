@@ -1,0 +1,9 @@
+# Dependencias del proceso offline de entrenamiento de AulaSenas2.
+#
+# Estado actual: el entrenamiento está pausado y no existen dependencias
+# reales de entrenamiento definidas para esta etapa.
+#
+# Cuando se autorice reanudar el entrenamiento, este archivo deberá
+# completarse únicamente con las librerías y versiones verificadas que
+# requiera el proceso autorizado. No se declaran dependencias del runtime
+# de apps/usuario/ ni del modelo ya exportado en models/exportados/gru_ctc_v3/.

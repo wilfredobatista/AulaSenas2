@@ -1,32 +1,14 @@
+/** Punto de entrada: conecta cámara con el detector y reconocedor GRU-CTC autoritativos. */
 import { CameraController } from './video/camera.js';
-import { SignRecognizer } from './reconocimiento/recognizer.js';
 import { Translator } from './traduccion/translator.js';
 import { SpeechService } from './traduccion/speech.js';
 import { UserPreferences } from './configuracion/preferences.js';
 import { UserInterface } from './ui/interface.js';
-import { ModelLoader } from './reconocimiento/modelLoader.js';
-import { MediaPipeAdapter } from './vision/mediapipeAdapter.js';
-
-const ui = new UserInterface();
-const preferences = new UserPreferences();
-const speech = new SpeechService(preferences);
-const translator = new Translator();
-const loader = new ModelLoader({ onStatus: (status, error) => ui.setModelStatus(status, error) });
-const recognizer = new SignRecognizer({ loader, onStatus: (status, error) => ui.setRecognitionStatus(status, error), onResult: (result) => ui.addRecognition(result) });
-const vision = new MediaPipeAdapter({ onStatus: (status) => ui.setVisionStatus(status) });
-globalThis.addEventListener?.('aulasenas:prediccion-dinamica', (event) => ui.addRecognition({ label: event.detail?.label, confidence: event.detail?.confianza ?? 0 }));
-const camera = new CameraController(document.querySelector('#camera'), {
-  onFrame: async (frame) => {
-    if (typeof globalThis.iniciarDetectorManos === 'function' && globalThis.aulaSenasGruCtcModelLoader?.obtenerEstado?.().disponible === true) {
-      const detector = await globalThis.iniciarDetectorManos();
-      await detector.send({ image: frame });
-      return;
-    }
-    if (globalThis.aulaSenasGruCtcModelLoader?.obtenerEstado?.().disponible !== true) return;
-    recognizer.process(frame);
-  },
-  onStatus: (status) => ui.setCameraStatus(status),
-  onStart: () => { if (globalThis.aulaSenasGruCtcStreamingRecognizer?.iniciar) globalThis.aulaSenasGruCtcStreamingRecognizer.iniciar(); },
-  onStop: () => { globalThis.aulaSenasGruCtcStreamingRecognizer?.detener?.('camara_detenida'); vision.close(); recognizer.reset(); }
-});
-ui.bind({ camera, recognizer, translator, speech, preferences });
+import { loadStreamingContracts, validateStreamingInput } from './reconocimiento/contractValidator.js';
+const ui=new UserInterface(), preferences=new UserPreferences(), speech=new SpeechService(preferences), translator=new Translator(); globalThis.validarEntradaStreaming=validateStreamingInput;
+const loader=globalThis.aulaSenasGruCtcModelLoader, recognizer=globalThis.aulaSenasGruCtcStreamingRecognizer; let inputContract=null;
+/** Envía frames reales al detector MediaPipe; no crea landmarks ni predicciones. */
+async function processFrame(video){if(!inputContract||!loader?.obtenerEstado?.().disponible||typeof globalThis.iniciarDetectorManos!=='function')return;const detector=await globalThis.iniciarDetectorManos();await detector.send({image:video});}
+const camera=new CameraController(document.querySelector('#camera'),{onFrame:processFrame,onStatus:(status,error)=>ui.setCameraStatus(status,error),onStart:async()=>{try{inputContract=await loadStreamingContracts();ui.setContractStatus('Contratos streaming cargados');await loader?.cargar?.({basePath:'/models/exportados/gru_ctc_v3'});if(loader?.obtenerEstado?.().disponible)recognizer?.iniciar?.();}catch(error){inputContract=null;ui.setContractStatus(error.message);}},onStop:()=>{inputContract=null;recognizer?.detener?.('camara_detenida')}});
+/** Los scripts autoritativos publican eventos globales consumidos por la interfaz. */
+globalThis.addEventListener?.('aulasenas:modelo-gru-ctc-estado',e=>ui.setModelStatus(e.detail));globalThis.addEventListener?.('aulasenas:estado-reconocimiento-holistic',e=>ui.setRecognitionStatus(e.detail?.estado));globalThis.addEventListener?.('aulasenas:prediccion-dinamica',e=>ui.addRecognition(e.detail,translator,speech,preferences));ui.bind({camera,speech,preferences});

@@ -1,3 +1,4 @@
+/* Reglas autoritativas de confianza, márgenes, validación y abstracción de landmarks. */
 (function (global) {
   const NOMBRES_PUNTOS_CLAVE_MANO = Object.freeze([
     "muneca",

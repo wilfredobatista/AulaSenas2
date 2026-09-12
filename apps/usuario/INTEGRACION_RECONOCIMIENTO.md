@@ -2,10 +2,10 @@
 
 Se conservaron dentro de Usuario las implementaciones autoritativas trasladadas desde la referencia:
 
-- `src/vision/handsDetector.reference.js`
-- `src/vision/normalizer.reference.js`
-- `src/reconocimiento/gruCtcModelLoader.reference.js`
-- `src/reconocimiento/gruCtcStreamingRecognizer.reference.js`
+- `src/vision/handsDetector.js`
+- `src/vision/normalizer.js`
+- `src/reconocimiento/gruCtcModelLoader.js`
+- `src/reconocimiento/gruCtcStreamingRecognizer.js`
 
 La activación queda condicionada a las dependencias que el código autoritativo exige:
 

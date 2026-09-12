@@ -1,0 +1,16 @@
+{
+  "parity_version": "aulasenas_tfjs_parity_v1",
+  "status": "approved",
+  "cases_checked": 22,
+  "failed_cases": 0,
+  "tolerance": 1e-05,
+  "maximum_probability_difference": 4.76837158203125e-07,
+  "maximum_state_difference": 1.3709068298339844e-06,
+  "memory_tensors_before": 28,
+  "memory_tensors_after": 28,
+  "runtime": {
+    "node": "v20.19.0",
+    "tensorflowjs": "4.22.0",
+    "backend": "cpu"
+  }
+}

@@ -1,70 +1,106 @@
 # Graph Report - AulaSenas2  (2026-09-12)
 
 ## Corpus Check
-- 47 files · ~25,602 words
+- 73 files · ~30,890 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 284 nodes · 483 edges · 12 communities (9 shown, 3 thin omitted)
-- Extraction: 97% EXTRACTED · 3% INFERRED · 0% AMBIGUOUS · INFERRED: 15 edges (avg confidence: 0.82)
+- 592 nodes · 769 edges · 48 communities (37 shown, 11 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 15 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `713cc9a7`
+- Built from commit: `0bdf3cb9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- main.js
-- handsDetector.reference.js
-- recognizer.js
-- heuristicRules.reference.js
-- gruCtcStreamingRecognizer.reference.js
+- usuario/src/main.js
+- handsDetector.js
+- inputShape.js
+- heuristicRules.js
+- gruCtcStreamingRecognizer.js
 - package.json
 - Reglas de desarrollo de AulaSenas2
-- normalizer.reference.js
-- gruCtcModelLoader.reference.js
+- normalizer.js
+- gru-ctc-streaming-input.schema.json
 - LandmarkExtractor
-- handsConfig.reference.js
+- gruCtcModelLoader.js
 - INTEGRACION_RECONOCIMIENTO.md
+- configurador/src/main.js
+- What You Must Do When Invoked
+- graphify reference: extra exports and benchmark
+- configurador/package.json
+- Arquitectura de AulaSenas2
+- graphify reference: query, path, explain
+- Skill común de AulaSenas2
+- Work Configurador
+- Work Contratos
+- graphify reference: add a URL and watch a folder
+- graphify reference: commit hook and native AGENTS.md integration
+- graphify reference: incremental update and cluster-only
+- Work Training
+- Work Usuario
+- graphify reference: GitHub clone and cross-repo merge
+- graphify reference: transcribe video and audio
+- Work QA
+- README.md
+- extraction-spec.md
+- captured-sample.schema.json
+- sample-metadata.schema.json
+- landmark-point.schema.json
+- frame.schema.json
+- gru-ctc-input.schema.json
+- Documentación de Usuario
+- data-stages.schema.json
+- landmarks.schema.json
+- AulaSeñas GRU-CTC TensorFlow.js
+- Models
+- Training
+- gru-ctc-streaming-frame.schema.json
+- SequenceBuffer
+- MediaPipeAdapter
+- ctcDecoder.js
+- handsConfig.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `normalizarLandmarksMano()` - 14 edges
 2. `ejecutarFotograma()` - 12 edges
-3. `onResults()` - 11 edges
-4. `procesarFotograma()` - 10 edges
-5. `UserInterface` - 10 edges
-6. `procesarFotogramaManos()` - 9 edges
-7. `extraerColeccionLandmarksManos()` - 9 edges
-8. `normalizarPuntoEspacial()` - 8 edges
-9. `SequenceBuffer` - 8 edges
-10. `Reglas de desarrollo de AulaSenas2` - 8 edges
+3. `What You Must Do When Invoked` - 12 edges
+4. `onResults()` - 11 edges
+5. `procesarFotograma()` - 10 edges
+6. `UserInterface` - 10 edges
+7. `/graphify` - 10 edges
+8. `procesarFotogramaManos()` - 9 edges
+9. `extraerColeccionLandmarksManos()` - 9 edges
+10. `normalizarPuntoEspacial()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
-- None detected - all connections are within the same source files.
+- `camera` --calls--> `loadStreamingContracts()`  [EXTRACTED]
+  apps/usuario/src/main.js → apps/usuario/src/reconocimiento/contractValidator.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (12 total, 3 thin omitted)
+## Communities (48 total, 11 thin omitted)
 
-### Community 0 - "main.js"
-Cohesion: 0.05
-Nodes (16): UserPreferences, camera, loader, preferences, recognizer, speech, translator, ui (+8 more)
+### Community 0 - "usuario/src/main.js"
+Cohesion: 0.07
+Nodes (17): UserPreferences, camera, preferences, speech, translator, ui, loadInputContract(), loadSchema() (+9 more)
 
-### Community 1 - "handsDetector.reference.js"
+### Community 1 - "handsDetector.js"
 Cohesion: 0.06
 Nodes (55): abstraerPuntosClaveMano(), actualizarDiagnosticoResultadosManos(), calcularDistanciaPuntosMano(), configuracionExclusionMargenesCamara, configurarMaximoManosDetector(), construirBanderasExclusionDatos(), construirRepresentacionCanonicaManos(), construirSlotCanonicoMano() (+47 more)
 
-### Community 2 - "recognizer.js"
-Cohesion: 0.11
-Nodes (12): acceptPrediction(), confidenceFromLogits(), greedyCtcDecode(), InferenceAdapter, FRAME_FEATURES, LANDMARK_FEATURES, TEMPORAL_LENGTH, validateTemporalInput() (+4 more)
+### Community 2 - "inputShape.js"
+Cohesion: 0.27
+Nodes (5): InferenceAdapter, FRAME_FEATURES, LANDMARK_FEATURES, TEMPORAL_LENGTH, validateTemporalInput()
 
-### Community 3 - "heuristicRules.reference.js"
+### Community 3 - "heuristicRules.js"
 Cohesion: 0.08
 Nodes (31): abstraerPuntoClaveMano(), abstraerPuntosClaveMano(), afirmarColeccionLandmarksTemplate(), afirmarCoordenadasPuntoTemplate(), afirmarFramesTemporalesCapturaFija(), afirmarIndicePuntoTemplate(), afirmarNombrePuntoTemplate(), afirmarPresenciaExplicitaPuntosTemplate() (+23 more)
 
-### Community 4 - "gruCtcStreamingRecognizer.reference.js"
+### Community 4 - "gruCtcStreamingRecognizer.js"
 Cohesion: 0.17
 Nodes (29): ahoraMonotonoMs(), aplicarFronteraAusenciaEstable(), cancelarCola(), classIdDesdeEtiqueta(), construirEntrada308(), construirVisual307(), copiarConteos(), detener() (+21 more)
 
@@ -76,29 +112,141 @@ Nodes (7): name, private, scripts, check, test, type, version
 Cohesion: 0.22
 Nodes (8): Aplicaciones, Dependencias, Forma de trabajo, graphify, Prohibiciones, Regla principal, Reglas de desarrollo de AulaSenas2, Ubicación obligatoria
 
-### Community 7 - "normalizer.reference.js"
+### Community 7 - "normalizer.js"
 Cohesion: 0.18
 Nodes (26): aplanarLandmarksAVector63(), calcularDistanciaEuclidiana3D(), calcularEscalaFallback(), calcularEscalaMano(), calcularFactorEscalaPalma(), calcularMagnitud3D(), calcularPromedio(), configuracionNormalizacionMano (+18 more)
 
-### Community 8 - "gruCtcModelLoader.reference.js"
+### Community 8 - "gru-ctc-streaming-input.schema.json"
+Cohesion: 0.09
+Nodes (25): additionalProperties, description, items, maxItems, minItems, type, items, maxItems (+17 more)
+
+### Community 10 - "gruCtcModelLoader.js"
 Cohesion: 0.22
 Nodes (11): cargar(), cargarJson(), cargarRecursos(), configurar(), copiar(), notificar(), obtenerEstado(), resolverUrl() (+3 more)
 
+### Community 12 - "configurador/src/main.js"
+Cohesion: 0.06
+Nodes (14): DataStore, CaptureSession, createSampleLabel(), contracts, extractLandmarks(), lastFrames, localExtractor, source (+6 more)
+
+### Community 13 - "What You Must Do When Invoked"
+Cohesion: 0.08
+Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native AGENTS.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
+
+### Community 14 - "graphify reference: extra exports and benchmark"
+Cohesion: 0.22
+Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
+
+### Community 15 - "configurador/package.json"
+Cohesion: 0.25
+Nodes (7): name, private, scripts, check, test, type, version
+
+### Community 16 - "Arquitectura de AulaSenas2"
+Cohesion: 0.25
+Nodes (7): Aplicación Configurador, Aplicación Usuario, Arquitectura de AulaSenas2, Contratos, Entrenamiento, Estructura, Separación
+
+### Community 17 - "graphify reference: query, path, explain"
+Cohesion: 0.33
+Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+
+### Community 18 - "Skill común de AulaSenas2"
+Cohesion: 0.50
+Nodes (3): Regla de ejecución, Reglas generales, Skill común de AulaSenas2
+
+### Community 19 - "Work Configurador"
+Cohesion: 0.50
+Nodes (3): Límites, Objetivo, Work Configurador
+
+### Community 20 - "Work Contratos"
+Cohesion: 0.50
+Nodes (3): Límites, Objetivo, Work Contratos
+
+### Community 21 - "graphify reference: add a URL and watch a folder"
+Cohesion: 0.50
+Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
+
+### Community 22 - "graphify reference: commit hook and native AGENTS.md integration"
+Cohesion: 0.50
+Nodes (3): For git commit hook, For native AGENTS.md integration, graphify reference: commit hook and native AGENTS.md integration
+
+### Community 23 - "graphify reference: incremental update and cluster-only"
+Cohesion: 0.50
+Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
+
+### Community 24 - "Work Training"
+Cohesion: 0.50
+Nodes (3): Límites, Objetivo, Work Training
+
+### Community 25 - "Work Usuario"
+Cohesion: 0.50
+Nodes (3): Límites, Objetivo, Work Usuario
+
+### Community 31 - "captured-sample.schema.json"
+Cohesion: 0.07
+Nodes (28): additionalProperties, format, type, description, items, minItems, type, $id (+20 more)
+
+### Community 32 - "sample-metadata.schema.json"
+Cohesion: 0.11
+Nodes (18): additionalProperties, description, $id, minLength, type, type, type, properties (+10 more)
+
+### Community 33 - "landmark-point.schema.json"
+Cohesion: 0.12
+Nodes (16): additionalProperties, description, $id, minProperties, properties, visibility, x, y (+8 more)
+
+### Community 34 - "frame.schema.json"
+Cohesion: 0.12
+Nodes (15): additionalProperties, description, $id, $ref, properties, landmarks, timestampMs, required (+7 more)
+
+### Community 35 - "gru-ctc-input.schema.json"
+Cohesion: 0.17
+Nodes (12): description, $id, items, items, maxItems, minItems, type, maxItems (+4 more)
+
+### Community 36 - "Documentación de Usuario"
+Cohesion: 0.33
+Nodes (5): Documentación de Usuario, Estado de disponibilidad, Flujo, Reconocimiento, Texto, voz y preferencias
+
+### Community 37 - "data-stages.schema.json"
+Cohesion: 0.33
+Nodes (5): allOf, description, $id, $schema, title
+
+### Community 38 - "landmarks.schema.json"
+Cohesion: 0.33
+Nodes (5): description, $id, oneOf, $schema, title
+
+### Community 39 - "AulaSeñas GRU-CTC TensorFlow.js"
+Cohesion: 0.33
+Nodes (5): AulaSeñas GRU-CTC TensorFlow.js, Contrato de ejecución, Decodificación CTC, Estado recurrente, Nodos reales
+
+### Community 40 - "Models"
+Cohesion: 0.33
+Nodes (5): Bundle vigente, Integridad, Models, Propósito, Relación con Training y Usuario
+
+### Community 41 - "Training"
+Cohesion: 0.33
+Nodes (5): Alcance reservado, Estado actual, Modelo utilizado mientras el entrenamiento está pausado, Relación entre áreas, Training
+
+### Community 42 - "gru-ctc-streaming-frame.schema.json"
+Cohesion: 0.20
+Nodes (9): description, $id, items, type, maxItems, minItems, $schema, title (+1 more)
+
 ## Knowledge Gaps
-- **37 isolated node(s):** `Integración de reconocimiento GRU/CTC`, `ui`, `preferences`, `speech`, `translator` (+32 more)
+- **220 isolated node(s):** `name`, `private`, `version`, `type`, `check` (+215 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **3 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **What connects `Integración de reconocimiento GRU/CTC`, `ui`, `preferences` to the rest of the system?**
-  _37 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `main.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.05224963715529753 - nodes in this community are weakly interconnected._
-- **Should `handsDetector.reference.js` be split into smaller, more focused modules?**
+- **What connects `name`, `private`, `version` to the rest of the system?**
+  _220 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `usuario/src/main.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.06868686868686869 - nodes in this community are weakly interconnected._
+- **Should `handsDetector.js` be split into smaller, more focused modules?**
   _Cohesion score 0.059562841530054644 - nodes in this community are weakly interconnected._
-- **Should `recognizer.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.10804597701149425 - nodes in this community are weakly interconnected._
-- **Should `heuristicRules.reference.js` be split into smaller, more focused modules?**
+- **Should `heuristicRules.js` be split into smaller, more focused modules?**
   _Cohesion score 0.08461538461538462 - nodes in this community are weakly interconnected._
+- **Should `gru-ctc-streaming-input.schema.json` be split into smaller, more focused modules?**
+  _Cohesion score 0.09230769230769231 - nodes in this community are weakly interconnected._
+- **Should `configurador/src/main.js` be split into smaller, more focused modules?**
+  _Cohesion score 0.05851063829787234 - nodes in this community are weakly interconnected._
+- **Should `What You Must Do When Invoked` be split into smaller, more focused modules?**
+  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
