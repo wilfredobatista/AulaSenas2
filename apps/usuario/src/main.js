@@ -14,8 +14,19 @@ const translator = new Translator();
 const loader = new ModelLoader({ onStatus: (status, error) => ui.setModelStatus(status, error) });
 const recognizer = new SignRecognizer({ loader, onStatus: (status, error) => ui.setRecognitionStatus(status, error), onResult: (result) => ui.addRecognition(result) });
 const vision = new MediaPipeAdapter({ onStatus: (status) => ui.setVisionStatus(status) });
+globalThis.addEventListener?.('aulasenas:prediccion-dinamica', (event) => ui.addRecognition({ label: event.detail?.label, confidence: event.detail?.confianza ?? 0 }));
 const camera = new CameraController(document.querySelector('#camera'), {
-  onFrame: (frame) => recognizer.process(frame),
-  onStatus: (status) => ui.setCameraStatus(status)
+  onFrame: async (frame) => {
+    if (typeof globalThis.iniciarDetectorManos === 'function' && globalThis.aulaSenasGruCtcModelLoader?.obtenerEstado?.().disponible === true) {
+      const detector = await globalThis.iniciarDetectorManos();
+      await detector.send({ image: frame });
+      return;
+    }
+    if (globalThis.aulaSenasGruCtcModelLoader?.obtenerEstado?.().disponible !== true) return;
+    recognizer.process(frame);
+  },
+  onStatus: (status) => ui.setCameraStatus(status),
+  onStart: () => { if (globalThis.aulaSenasGruCtcStreamingRecognizer?.iniciar) globalThis.aulaSenasGruCtcStreamingRecognizer.iniciar(); },
+  onStop: () => { globalThis.aulaSenasGruCtcStreamingRecognizer?.detener?.('camara_detenida'); vision.close(); recognizer.reset(); }
 });
 ui.bind({ camera, recognizer, translator, speech, preferences });

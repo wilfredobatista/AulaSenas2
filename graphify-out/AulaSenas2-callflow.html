@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AulaSenas2 — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>AulaSenas2 — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 105 nodes, 138 edges, 11 communities. Commit: c04d8b6</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#ingest-cache-update">Ingestion &amp; Updates</a>
+    <a href="#tests-fixtures">Tests &amp; Fixtures</a>
+    <a href="#reglas-de-desarrollo-de-aulasenas2">Reglas de desarrollo de AulaSenas2</a>
+    <a href="#mediapipeadapter">MediaPipeAdapter</a>
+    <a href="#signrecognizer">SignRecognizer</a>
+    <a href="#landmarkextractor">LandmarkExtractor</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>19 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>36 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    INGEST_CACHE_UPDATE_FF457338("Ingestion &amp; Updates<br/><small>6 nodes</small>")
+    class INGEST_CACHE_UPDATE_FF457338 module;
+    TESTS_FIXTURES_B84B1DCC("Tests &amp; Fixtures<br/><small>19 nodes</small>")
+    class TESTS_FIXTURES_B84B1DCC module;
+    REGLAS_DE_DESARROLLO_DE_AULASENAS2_FB3F2D3F("Reglas de desarrollo de AulaSenas2<br/><small>9 nodes</small>")
+    class REGLAS_DE_DESARROLLO_DE_AULASENAS2_FB3F2D3F module;
+    MEDIAPIPEADAPTER_6EE13981("MediaPipeAdapter<br/><small>6 nodes</small>")
+    class MEDIAPIPEADAPTER_6EE13981 module;
+    SIGNRECOGNIZER_4D810043("SignRecognizer<br/><small>5 nodes</small>")
+    class SIGNRECOGNIZER_4D810043 module;
+    LANDMARKEXTRACTOR_C31D167A("LandmarkExtractor<br/><small>5 nodes</small>")
+    class LANDMARKEXTRACTOR_C31D167A module;
+    BUILD_GRAPH_321CBB04 -->|imports x6| TESTS_FIXTURES_B84B1DCC
+    CLI_SKILLS_9964CBB8 -->|imports x2| INGEST_CACHE_UPDATE_FF457338
+    CLI_SKILLS_9964CBB8 -->|imports x2| SIGNRECOGNIZER_4D810043
+    CLI_SKILLS_9964CBB8 -->|imports x2| MEDIAPIPEADAPTER_6EE13981
+    SIGNRECOGNIZER_4D810043 -->|method| BUILD_GRAPH_321CBB04
+    CLI_SKILLS_9964CBB8 -->|imports| BUILD_GRAPH_321CBB04
+    BUILD_GRAPH_321CBB04 -->|contains| SIGNRECOGNIZER_4D810043
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>19</td><td><code>2, 5</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>36</td><td><code>0, 1</code></td></tr><tr><td>Ingestion &amp; Updates</td><td>6</td><td><code>7</code></td></tr><tr><td>Tests &amp; Fixtures</td><td>19</td><td><code>3, 4</code></td></tr><tr><td>Reglas de desarrollo de AulaSenas2</td><td>9</td><td><code>6</code></td></tr><tr><td>MediaPipeAdapter</td><td>6</td><td><code>10</code></td></tr><tr><td>SignRecognizer</td><td>5</td><td><code>8</code></td></tr><tr><td>LandmarkExtractor</td><td>5</td><td><code>9</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">CLI &amp; Skill Installers -&gt; SignRecognizer -&gt; Graph Build -&gt; Tests &amp; Fixtures -&gt; Ingestion &amp; Updates -&gt; Reglas de desarrollo de AulaSenas2 -&gt; MediaPipeAdapter</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>105 nodes · 138 edges · 11 communities (6 shown, 5 thin omitted)</li>
+      <li>Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.8)</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `UserInterface` - 10 edges</li>
+      <li>2. `Reglas de desarrollo de AulaSenas2` - 8 edges</li>
+      <li>3. `SequenceBuffer` - 8 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around apps, usuario, packagejson, reconocimiento, mostly in apps/usuario/package.json, src/reconocimiento/confidence.js, src/vision/normalizer.js. This section covers 19 nodes and 26 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (19 nodes, 26 edges)
+    subgraph build_graph_apps_usuario_package_json_fb80f23f["apps/usuario/package.json"]
+        apps_usuario_package_scripts_check_02180db8("check<br/><small>apps/usuario/package.json</small>")
+        apps_usuario_package_name_9b6e3f46("name<br/><small>apps/usuario/package.json</small>")
+        apps_usuario_package_e6bb9d56("package.json")
+        apps_usuario_package_private_11576b2b("private<br/><small>apps/usuario/package.json</small>")
+        apps_usuario_package_scripts_0da1774a("scripts<br/><small>apps/usuario/package.json</small>")
+        apps_usuario_package_scripts_test_f6d7c576("test<br/><small>apps/usuario/package.json</small>")
+        apps_usuario_package_type_056e0d34("type<br/><small>apps/usuario/package.json</small>")
+    end
+    subgraph build_graph_src_reconocimiento_confidence_js_e70f517a["src/reconocimiento/confidence.js"]
+        apps_usuario_src_reconocimiento_confidence_accep_62c93cc4("acceptPrediction()<br/><small>src/reconocimiento/confidence.js</small>")
+        apps_usuario_src_reconocimiento_confidence_confi_d9ce4b2b("confidenceFromLogits()<br/><small>src/reconocimiento/confidence.js</small>")
+        apps_usuario_src_reconocimiento_confidence_907f7905("confidence.js")
+    end
+    subgraph build_graph_src_vision_normalizer_js_3f5ee42e["src/vision/normalizer.js"]
+        apps_usuario_src_vision_normalizer_appenddeltams_02e3ac30("appendDeltaMsNorm()<br/><small>src/vision/normalizer.js</small>")
+        apps_usuario_src_vision_normalizer_normalizeland_c08445a4("normalizeLandmarks()<br/><small>src/vision/normalizer.js</small>")
+        apps_usuario_src_vision_normalizer_3ac58203("normalizer.js")
+    end
+    subgraph build_graph_src_reconocimiento_ctcDecoder_js_37d9fcef["src/reconocimiento/ctcDecoder.js"]
+        apps_usuario_src_reconocimiento_ctcdecoder_greed_9784e7d4("greedyCtcDecode()<br/><small>src/reconocimiento/ctcDecoder.js</small>")
+        apps_usuario_src_reconocimiento_ctcdecoder_e5f7c4f7("ctcDecoder.js")
+    end
+    subgraph build_graph_src_reconocimiento_recognizer_js_6537d4c0["src/reconocimiento/recognizer.js"]
+        apps_usuario_src_reconocimiento_recognizer_629ab898("recognizer.js")
+        apps_usuario_src_reconocimiento_recognizer_signr_23637400("processLandmarks()<br/><small>src/reconocimiento/recognizer.js</small>")
+    end
+    apps_usuario_tests_ctcdecoder_test_aedec17a("ctcDecoder.test.js")
+    apps_usuario_src_reconocimiento_recognizer_signr_23637400 -->|calls| apps_usuario_src_reconocimiento_confidence_accep_62c93cc4
+    apps_usuario_src_reconocimiento_recognizer_signr_23637400 -->|calls| apps_usuario_src_reconocimiento_confidence_confi_d9ce4b2b
+    apps_usuario_src_reconocimiento_recognizer_signr_23637400 -->|calls| apps_usuario_src_reconocimiento_ctcdecoder_greed_9784e7d4
+    apps_usuario_src_reconocimiento_recognizer_signr_23637400 -->|calls| apps_usuario_src_vision_normalizer_appenddeltams_02e3ac30
+    apps_usuario_src_vision_normalizer_appenddeltams_02e3ac30 -->|calls| apps_usuario_src_vision_normalizer_normalizeland_c08445a4
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_vision_normalizer_appenddeltams_02e3ac30
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_reconocimiento_ctcdecoder_greed_9784e7d4
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_reconocimiento_confidence_accep_62c93cc4
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_reconocimiento_confidence_confi_d9ce4b2b
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_vision_normalizer_3ac58203
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_reconocimiento_ctcdecoder_e5f7c4f7
+    apps_usuario_src_reconocimiento_recognizer_629ab898 -->|imports| apps_usuario_src_reconocimiento_confidence_907f7905
+    apps_usuario_tests_ctcdecoder_test_aedec17a -->|imports| apps_usuario_src_reconocimiento_ctcdecoder_greed_9784e7d4
+    apps_usuario_tests_ctcdecoder_test_aedec17a -->|imports| apps_usuario_src_reconocimiento_ctcdecoder_e5f7c4f7
+    %% Omitted for readability: 1 nodes, 0 edges
+    class apps_usuario_package_scripts_check_02180db8 function;
+    class apps_usuario_package_name_9b6e3f46 function;
+    class apps_usuario_package_e6bb9d56 function;
+    class apps_usuario_package_private_11576b2b function;
+    class apps_usuario_package_scripts_0da1774a function;
+    class apps_usuario_package_scripts_test_f6d7c576 function;
+    class apps_usuario_package_type_056e0d34 function;
+    class apps_usuario_src_reconocimiento_confidence_accep_62c93cc4 function;
+    class apps_usuario_src_reconocimiento_confidence_confi_d9ce4b2b function;
+    class apps_usuario_src_reconocimiento_confidence_907f7905 module;
+    class apps_usuario_src_vision_normalizer_appenddeltams_02e3ac30 function;
+    class apps_usuario_src_vision_normalizer_normalizeland_c08445a4 function;
+    class apps_usuario_src_vision_normalizer_3ac58203 module;
+    class apps_usuario_src_reconocimiento_ctcdecoder_greed_9784e7d4 function;
+    class apps_usuario_src_reconocimiento_ctcdecoder_e5f7c4f7 module;
+    class apps_usuario_src_reconocimiento_recognizer_629ab898 module;
+    class apps_usuario_src_reconocimiento_recognizer_signr_23637400 function;
+    class apps_usuario_tests_ctcdecoder_test_aedec17a test;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>acceptPrediction()</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>acceptPrediction() node in src/reconocimiento/confidence.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>confidenceFromLogits()</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>Turns a local path or remote repository into analysis context.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>greedyCtcDecode()</code><br><small style="color:var(--muted)">src/reconocimiento/ctcDecoder.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ctcDecoder.test.js</code><br><small style="color:var(--muted)">usuario/tests/ctcDecoder.test.js</small><br><code>processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>greedyCtcDecode() node in src/reconocimiento/ctcDecoder.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>.processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SignRecognizer</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><code>acceptPrediction()</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small><br><code>appendDeltaMsNorm()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small><br><code>confidenceFromLogits()</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small><br>+1 more</td>
+  <td>.processLandmarks() node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>appendDeltaMsNorm()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><code>normalizeLandmarks()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td>appendDeltaMsNorm() node in src/vision/normalizer.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>normalizeLandmarks()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>appendDeltaMsNorm()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>normalizeLandmarks() node in src/vision/normalizer.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>confidence.js</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>confidence.js node in src/reconocimiento/confidence.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>ctcDecoder.js</code><br><small style="color:var(--muted)">src/reconocimiento/ctcDecoder.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>ctcDecoder.test.js</code><br><small style="color:var(--muted)">usuario/tests/ctcDecoder.test.js</small><br><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>ctcDecoder.js node in src/reconocimiento/ctcDecoder.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>acceptPrediction()</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small><br><code>appendDeltaMsNorm()</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small><br><code>confidence.js</code><br><small style="color:var(--muted)">src/reconocimiento/confidence.js</small><br>+8 more</td>
+  <td>recognizer.js node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>normalizer.js</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><code>inputShape.js</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small><br><code>LANDMARK_FEATURES</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td>normalizer.js node in src/vision/normalizer.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>ctcDecoder.test.js</code><br><small style="color:var(--muted)">usuario/tests/ctcDecoder.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>ctcDecoder.js</code><br><small style="color:var(--muted)">src/reconocimiento/ctcDecoder.js</small><br><code>greedyCtcDecode()</code><br><small style="color:var(--muted)">src/reconocimiento/ctcDecoder.js</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>package.json</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>package.json node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>name</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>name node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>private</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>private node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>scripts</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>scripts node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>check</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>check node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>test</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>type</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>type node in apps/usuario/package.json.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>version</code><br><small style="color:var(--muted)">apps/usuario/package.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>version node in apps/usuario/package.json.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>apps/usuario/package.json</code></td><td>8 nodes</td></tr>
+<tr><td><code>src/reconocimiento/confidence.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/vision/normalizer.js</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/reconocimiento/ctcDecoder.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/reconocimiento/recognizer.js</code></td><td>2 nodes</td></tr>
+<tr><td><code>usuario/tests/ctcDecoder.test.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x12, calls x5, imports x5, imports x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around apps, usuario, interfacejs, mainjs, mostly in src/ui/interface.js, usuario/src/main.js, src/configuracion/preferences.js. This section covers 36 nodes and 48 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (36 nodes, 48 edges)
+    subgraph cli_skills_src_configuracion_preferences_js_c44bdba5["src/configuracion/preferences.js"]
+        apps_usuario_src_configuracion_preferences_userp_8713d46a("UserPreferences<br/><small>src/configuracion/preferences.js</small>")
+        apps_usuario_src_configuracion_preferences_userp_5b7232cf("constructor()<br/><small>src/configuracion/preferences.js</small>")
+        apps_usuario_src_configuracion_preferences_userp_68974177("get()<br/><small>src/configuracion/preferences.js</small>")
+        apps_usuario_src_configuracion_preferences_userp_962eb59a("read()<br/><small>src/configuracion/preferences.js</small>")
+        apps_usuario_src_configuracion_preferences_userp_35d3347e("set()<br/><small>src/configuracion/preferences.js</small>")
+    end
+    subgraph cli_skills_src_reconocimiento_modelLoader_js_b44f1fa0["src/reconocimiento/modelLoader.js"]
+        apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2("ModelLoader<br/><small>src/reconocimiento/modelLoader.js</small>")
+        apps_usuario_src_reconocimiento_modelloader_mode_372d0d84("constructor()<br/><small>src/reconocimiento/modelLoader.js</small>")
+        apps_usuario_src_reconocimiento_modelloader_mode_7c0cfe75("load()<br/><small>src/reconocimiento/modelLoader.js</small>")
+        apps_usuario_src_reconocimiento_modelloader_mode_be100c45("available()<br/><small>src/reconocimiento/modelLoader.js</small>")
+    end
+    subgraph cli_skills_src_traduccion_speech_js_bfaa050f["src/traduccion/speech.js"]
+        apps_usuario_src_traduccion_speech_speechservice_15d50b39("SpeechService<br/><small>src/traduccion/speech.js</small>")
+        apps_usuario_src_traduccion_speech_speechservice_0f07b118("constructor()<br/><small>src/traduccion/speech.js</small>")
+        apps_usuario_src_traduccion_speech_speechservice_a4f6d08f("speak()<br/><small>src/traduccion/speech.js</small>")
+    end
+    subgraph cli_skills_src_ui_interface_js_5808f990["src/ui/interface.js"]
+        apps_usuario_src_ui_interface_userinterface_16e5cc2f("UserInterface<br/><small>src/ui/interface.js</small>")
+        apps_usuario_src_ui_interface_userinterface_bind_a04ee0d5("bind()<br/><small>src/ui/interface.js</small>")
+        apps_usuario_src_ui_interface_userinterface_cons_e7f4363e("constructor()<br/><small>src/ui/interface.js</small>")
+    end
+    subgraph cli_skills_src_traduccion_translator_js_56c44d81["src/traduccion/translator.js"]
+        apps_usuario_src_traduccion_translator_translato_da1d4b79("Translator<br/><small>src/traduccion/translator.js</small>")
+        apps_usuario_src_traduccion_translator_translato_70a7a148("interpret()<br/><small>src/traduccion/translator.js</small>")
+    end
+    apps_usuario_src_main_94f3670e("main.js")
+    apps_usuario_src_configuracion_preferences_userp_8713d46a -->|method| apps_usuario_src_configuracion_preferences_userp_5b7232cf
+    apps_usuario_src_configuracion_preferences_userp_8713d46a -->|method| apps_usuario_src_configuracion_preferences_userp_68974177
+    apps_usuario_src_configuracion_preferences_userp_8713d46a -->|method| apps_usuario_src_configuracion_preferences_userp_962eb59a
+    apps_usuario_src_configuracion_preferences_userp_8713d46a -->|method| apps_usuario_src_configuracion_preferences_userp_35d3347e
+    apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2 -->|method| apps_usuario_src_reconocimiento_modelloader_mode_372d0d84
+    apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2 -->|method| apps_usuario_src_reconocimiento_modelloader_mode_7c0cfe75
+    apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2 -->|method| apps_usuario_src_reconocimiento_modelloader_mode_be100c45
+    apps_usuario_src_traduccion_speech_speechservice_15d50b39 -->|method| apps_usuario_src_traduccion_speech_speechservice_0f07b118
+    apps_usuario_src_traduccion_speech_speechservice_15d50b39 -->|method| apps_usuario_src_traduccion_speech_speechservice_a4f6d08f
+    apps_usuario_src_traduccion_translator_translato_da1d4b79 -->|method| apps_usuario_src_traduccion_translator_translato_70a7a148
+    apps_usuario_src_ui_interface_userinterface_16e5cc2f -->|method| apps_usuario_src_ui_interface_userinterface_cons_e7f4363e
+    apps_usuario_src_ui_interface_userinterface_16e5cc2f -->|method| apps_usuario_src_ui_interface_userinterface_bind_a04ee0d5
+    apps_usuario_src_configuracion_preferences_userp_5b7232cf -->|calls| apps_usuario_src_configuracion_preferences_userp_962eb59a
+    apps_usuario_src_main_94f3670e -->|imports| apps_usuario_src_traduccion_translator_translato_da1d4b79
+    apps_usuario_src_main_94f3670e -->|imports| apps_usuario_src_traduccion_speech_speechservice_15d50b39
+    apps_usuario_src_main_94f3670e -->|imports| apps_usuario_src_configuracion_preferences_userp_8713d46a
+    apps_usuario_src_main_94f3670e -->|imports| apps_usuario_src_ui_interface_userinterface_16e5cc2f
+    apps_usuario_src_main_94f3670e -->|imports| apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2
+    %% Omitted for readability: 18 nodes, 0 edges
+    class apps_usuario_src_configuracion_preferences_userp_8713d46a klass;
+    class apps_usuario_src_configuracion_preferences_userp_5b7232cf function;
+    class apps_usuario_src_configuracion_preferences_userp_68974177 function;
+    class apps_usuario_src_configuracion_preferences_userp_962eb59a function;
+    class apps_usuario_src_configuracion_preferences_userp_35d3347e function;
+    class apps_usuario_src_reconocimiento_modelloader_mode_f8fa86d2 klass;
+    class apps_usuario_src_reconocimiento_modelloader_mode_372d0d84 function;
+    class apps_usuario_src_reconocimiento_modelloader_mode_7c0cfe75 function;
+    class apps_usuario_src_reconocimiento_modelloader_mode_be100c45 function;
+    class apps_usuario_src_traduccion_speech_speechservice_15d50b39 klass;
+    class apps_usuario_src_traduccion_speech_speechservice_0f07b118 function;
+    class apps_usuario_src_traduccion_speech_speechservice_a4f6d08f function;
+    class apps_usuario_src_ui_interface_userinterface_16e5cc2f klass;
+    class apps_usuario_src_ui_interface_userinterface_bind_a04ee0d5 function;
+    class apps_usuario_src_ui_interface_userinterface_cons_e7f4363e function;
+    class apps_usuario_src_traduccion_translator_translato_da1d4b79 klass;
+    class apps_usuario_src_traduccion_translator_translato_70a7a148 function;
+    class apps_usuario_src_main_94f3670e module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>UserPreferences</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>#read()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small><br><code>get()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small><br>+1 more</td>
+  <td>UserPreferences node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>ModelLoader</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>available()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small><br><code>load()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td>ModelLoader node in src/reconocimiento/modelLoader.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>SpeechService</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>constructor()</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small><br><code>speak()</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td>SpeechService node in src/traduccion/speech.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Translator</code><br><small style="color:var(--muted)">src/traduccion/translator.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>interpret()</code><br><small style="color:var(--muted)">src/traduccion/translator.js</small></td>
+  <td>Translator node in src/traduccion/translator.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserPreferences</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><code>#read()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td>.constructor() node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>.get()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserPreferences</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.get() node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>.#read()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>constructor()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small><br><code>UserPreferences</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.#read() node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>.set()</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserPreferences</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.set() node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>.available()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ModelLoader</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.available() node in src/reconocimiento/modelLoader.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ModelLoader</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/reconocimiento/modelLoader.js.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>.load()</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>ModelLoader</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.load() node in src/reconocimiento/modelLoader.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SpeechService</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/traduccion/speech.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>.speak()</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SpeechService</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.speak() node in src/traduccion/speech.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>.interpret()</code><br><small style="color:var(--muted)">src/traduccion/translator.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>Translator</code><br><small style="color:var(--muted)">src/traduccion/translator.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.interpret() node in src/traduccion/translator.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>preferences.js</code><br><small style="color:var(--muted)">src/configuracion/preferences.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>preferences.js node in src/configuracion/preferences.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>camera.js</code><br><small style="color:var(--muted)">src/video/camera.js</small><br><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small><br><code>interface.js</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br>+13 more</td>
+  <td>main.js node in usuario/src/main.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>preferences</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>preferences node in usuario/src/main.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>speech</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>speech node in usuario/src/main.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>translator</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>translator node in usuario/src/main.js.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>ui</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ui node in usuario/src/main.js.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>modelLoader.js</code><br><small style="color:var(--muted)">src/reconocimiento/modelLoader.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>modelLoader.js node in src/reconocimiento/modelLoader.js.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>speech.js</code><br><small style="color:var(--muted)">src/traduccion/speech.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>speech.js node in src/traduccion/speech.js.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>translator.js</code><br><small style="color:var(--muted)">src/traduccion/translator.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>translator.js node in src/traduccion/translator.js.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>addRecognition()</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br><code>bind()</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br>+5 more</td>
+  <td>UserInterface node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>.addRecognition()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>recognizer</code><br><small style="color:var(--muted)">usuario/src/main.js</small><br><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><code>setText()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>.addRecognition() node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>.bind()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><code>setCameraStatus()</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br><code>setText()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>.bind() node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>.setCameraStatus()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>bind()</code><br><small style="color:var(--muted)">src/ui/interface.js</small><br><code>camera</code><br><small style="color:var(--muted)">usuario/src/main.js</small><br><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.setCameraStatus() node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>.setModelStatus()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>loader</code><br><small style="color:var(--muted)">usuario/src/main.js</small><br><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.setModelStatus() node in src/ui/interface.js.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>.setRecognitionStatus()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>recognizer</code><br><small style="color:var(--muted)">usuario/src/main.js</small><br><code>UserInterface</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.setRecognitionStatus() node in src/ui/interface.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/ui/interface.js</code></td><td>10 nodes</td></tr>
+<tr><td><code>usuario/src/main.js</code></td><td>8 nodes</td></tr>
+<tr><td><code>src/configuracion/preferences.js</code></td><td>6 nodes</td></tr>
+<tr><td><code>src/reconocimiento/modelLoader.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>src/traduccion/speech.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>src/traduccion/translator.js</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x18, contains x12, imports x5, imports x5. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Ingestion & Updates ====== -->
+<h2 id="ingest-cache-update">4. Ingestion &amp; Updates</h2>
+<p>Ingestion &amp; Updates groups implementation around camerajs, apps, usuario, video, mostly in src/video/camera.js. This section covers 6 nodes and 5 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Ingestion &amp; Updates (6 nodes, 5 edges)
+    apps_usuario_src_video_camera_cameracontroller_2a6d6c28("CameraController<br/><small>src/video/camera.js</small>")
+    apps_usuario_src_video_camera_cameracontroller_c_17b26506("constructor()<br/><small>src/video/camera.js</small>")
+    apps_usuario_src_video_camera_cameracontroller_s_081d6876("start()<br/><small>src/video/camera.js</small>")
+    apps_usuario_src_video_camera_cameracontroller_s_ddd27bb5("stop()<br/><small>src/video/camera.js</small>")
+    apps_usuario_src_video_camera_cameracontroller_a_74367328("active()<br/><small>src/video/camera.js</small>")
+    apps_usuario_src_video_camera_6cbabf6e("camera.js")
+    apps_usuario_src_video_camera_cameracontroller_2a6d6c28 -->|method| apps_usuario_src_video_camera_cameracontroller_c_17b26506
+    apps_usuario_src_video_camera_cameracontroller_2a6d6c28 -->|method| apps_usuario_src_video_camera_cameracontroller_s_081d6876
+    apps_usuario_src_video_camera_cameracontroller_2a6d6c28 -->|method| apps_usuario_src_video_camera_cameracontroller_s_ddd27bb5
+    apps_usuario_src_video_camera_cameracontroller_2a6d6c28 -->|method| apps_usuario_src_video_camera_cameracontroller_a_74367328
+    class apps_usuario_src_video_camera_cameracontroller_2a6d6c28 klass;
+    class apps_usuario_src_video_camera_cameracontroller_c_17b26506 function;
+    class apps_usuario_src_video_camera_cameracontroller_s_081d6876 function;
+    class apps_usuario_src_video_camera_cameracontroller_s_ddd27bb5 function;
+    class apps_usuario_src_video_camera_cameracontroller_a_74367328 function;
+    class apps_usuario_src_video_camera_6cbabf6e module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>active()</code><br><small style="color:var(--muted)">src/video/camera.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/video/camera.js</small><br><code>start()</code><br><small style="color:var(--muted)">src/video/camera.js</small><br>+1 more</td>
+  <td>CameraController node in src/video/camera.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>.active()</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.active() node in src/video/camera.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/video/camera.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>.start()</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.start() node in src/video/camera.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>.stop()</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>CameraController</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.stop() node in src/video/camera.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>camera.js</code><br><small style="color:var(--muted)">src/video/camera.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>camera.js node in src/video/camera.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/video/camera.js</code></td><td>6 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x4, contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Tests & Fixtures ====== -->
+<h2 id="tests-fixtures">5. Tests &amp; Fixtures</h2>
+<p>Tests &amp; Fixtures groups implementation around apps, usuario, reconocimiento, sequencebufferjs, mostly in src/reconocimiento/sequenceBuffer.js, src/reconocimiento/inputShape.js, src/reconocimiento/inferenceAdapter.js. This section covers 19 nodes and 22 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Tests &amp; Fixtures (19 nodes, 22 edges)
+    subgraph tests_fixtures_src_reconocimiento_sequenceBuffer_4eee1533["src/reconocimiento/sequenceBuffer.js"]
+        apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1("SequenceBuffer<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_s_fb3efdbd("constructor()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_s_362b1cde("push()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_s_8787db8e("clear()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_s_43853c9b("ready()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_s_0ccc8af7("toArray()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_v_9053e7ac("validateFrame()<br/><small>src/reconocimiento/sequenceBuffer.js</small>")
+        apps_usuario_src_reconocimiento_sequencebuffer_63ebabb3("sequenceBuffer.js")
+    end
+    subgraph tests_fixtures_src_reconocimiento_inferenceAdapt_41dc7a17["src/reconocimiento/inferenceAdapter.js"]
+        apps_usuario_src_reconocimiento_inferenceadapter_d4a6f463("inferenceAdapter.js")
+        apps_usuario_src_reconocimiento_inferenceadapter_52be7901("InferenceAdapter<br/><small>src/reconocimiento/inferenceAdapter.js</small>")
+        apps_usuario_src_reconocimiento_inferenceadapter_4b84b882("infer()<br/><small>src/reconocimiento/inferenceAdapter.js</small>")
+        apps_usuario_src_reconocimiento_inferenceadapter_d802eba3("constructor()<br/><small>src/reconocimiento/inferenceAdapter.js</small>")
+    end
+    subgraph tests_fixtures_src_reconocimiento_inputShape_js_b1557adc["src/reconocimiento/inputShape.js"]
+        apps_usuario_src_reconocimiento_inputshape_valid_e831dd26("validateTemporalInput()<br/><small>src/reconocimiento/inputShape.js</small>")
+        apps_usuario_src_reconocimiento_inputshape_fbccb5ca("inputShape.js")
+        apps_usuario_src_reconocimiento_inputshape_frame_f2584613("FRAME_FEATURES<br/><small>src/reconocimiento/inputShape.js</small>")
+        apps_usuario_src_reconocimiento_inputshape_landm_1546fc04("LANDMARK_FEATURES<br/><small>src/reconocimiento/inputShape.js</small>")
+    end
+    apps_usuario_tests_inputshape_test_1e351533("inputShape.test.js")
+    apps_usuario_tests_sequencebuffer_test_90d5931c("sequenceBuffer.test.js")
+    apps_usuario_src_reconocimiento_inferenceadapter_52be7901 -->|method| apps_usuario_src_reconocimiento_inferenceadapter_d802eba3
+    apps_usuario_src_reconocimiento_inferenceadapter_52be7901 -->|method| apps_usuario_src_reconocimiento_inferenceadapter_4b84b882
+    apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 -->|method| apps_usuario_src_reconocimiento_sequencebuffer_s_fb3efdbd
+    apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 -->|method| apps_usuario_src_reconocimiento_sequencebuffer_s_362b1cde
+    apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 -->|method| apps_usuario_src_reconocimiento_sequencebuffer_s_8787db8e
+    apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 -->|method| apps_usuario_src_reconocimiento_sequencebuffer_s_43853c9b
+    apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 -->|method| apps_usuario_src_reconocimiento_sequencebuffer_s_0ccc8af7
+    apps_usuario_src_reconocimiento_inferenceadapter_4b84b882 -->|calls| apps_usuario_src_reconocimiento_inputshape_valid_e831dd26
+    apps_usuario_src_reconocimiento_sequencebuffer_s_362b1cde -->|calls| apps_usuario_src_reconocimiento_sequencebuffer_v_9053e7ac
+    apps_usuario_src_reconocimiento_inferenceadapter_d4a6f463 -->|imports| apps_usuario_src_reconocimiento_inputshape_valid_e831dd26
+    apps_usuario_src_reconocimiento_inferenceadapter_d4a6f463 -->|imports| apps_usuario_src_reconocimiento_inputshape_fbccb5ca
+    apps_usuario_tests_inputshape_test_1e351533 -->|imports| apps_usuario_src_reconocimiento_inputshape_valid_e831dd26
+    apps_usuario_tests_inputshape_test_1e351533 -->|imports| apps_usuario_src_reconocimiento_inputshape_fbccb5ca
+    apps_usuario_tests_sequencebuffer_test_90d5931c -->|imports| apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1
+    apps_usuario_tests_sequencebuffer_test_90d5931c -->|imports| apps_usuario_src_reconocimiento_sequencebuffer_63ebabb3
+    %% Omitted for readability: 1 nodes, 0 edges
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_13b6c5b1 klass;
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_fb3efdbd function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_362b1cde function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_8787db8e function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_43853c9b function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_s_0ccc8af7 function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_v_9053e7ac function;
+    class apps_usuario_src_reconocimiento_sequencebuffer_63ebabb3 module;
+    class apps_usuario_src_reconocimiento_inferenceadapter_d4a6f463 module;
+    class apps_usuario_src_reconocimiento_inferenceadapter_52be7901 klass;
+    class apps_usuario_src_reconocimiento_inferenceadapter_4b84b882 function;
+    class apps_usuario_src_reconocimiento_inferenceadapter_d802eba3 function;
+    class apps_usuario_src_reconocimiento_inputshape_valid_e831dd26 function;
+    class apps_usuario_src_reconocimiento_inputshape_fbccb5ca module;
+    class apps_usuario_src_reconocimiento_inputshape_frame_f2584613 klass;
+    class apps_usuario_src_reconocimiento_inputshape_landm_1546fc04 klass;
+    class apps_usuario_tests_inputshape_test_1e351533 test;
+    class apps_usuario_tests_sequencebuffer_test_90d5931c test;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>InferenceAdapter</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><code>constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small><br><code>infer()</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td>InferenceAdapter node in src/reconocimiento/inferenceAdapter.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>InferenceAdapter</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/reconocimiento/inferenceAdapter.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>.infer()</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>InferenceAdapter</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td><code>validateTemporalInput()</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td>.infer() node in src/reconocimiento/inferenceAdapter.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>validateTemporalInput()</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>infer()</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small><br><code>inferenceAdapter.js</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small><br><code>inputShape.test.js</code><br><small style="color:var(--muted)">usuario/tests/inputShape.test.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>validateTemporalInput() node in src/reconocimiento/inputShape.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>inferenceAdapter.js</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><code>inputShape.js</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small><br><code>validateTemporalInput()</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td>inferenceAdapter.js node in src/reconocimiento/inferenceAdapter.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>inputShape.js</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>inferenceAdapter.js</code><br><small style="color:var(--muted)">src/reconocimiento/inferenceAdapter.js</small><br><code>inputShape.test.js</code><br><small style="color:var(--muted)">usuario/tests/inputShape.test.js</small><br><code>normalizer.js</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>inputShape.js node in src/reconocimiento/inputShape.js.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>FRAME_FEATURES</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>FRAME_FEATURES node in src/reconocimiento/inputShape.js.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>LANDMARK_FEATURES</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>normalizer.js</code><br><small style="color:var(--muted)">src/vision/normalizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>LANDMARK_FEATURES node in src/reconocimiento/inputShape.js.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>TEMPORAL_LENGTH</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>TEMPORAL_LENGTH node in src/reconocimiento/inputShape.js.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>inputShape.test.js</code><br><small style="color:var(--muted)">usuario/tests/inputShape.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>inputShape.js</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small><br><code>validateTemporalInput()</code><br><small style="color:var(--muted)">src/reconocimiento/inputShape.js</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>sequenceBuffer.test.js</code><br><small style="color:var(--muted)">usuario/tests/sequenceBuffer.test.js</small></td>
+  <td><code>clear()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small><br><code>push()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small><br>+2 more</td>
+  <td>SequenceBuffer node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>.clear()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.clear() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>.push()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><code>validateFrame()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>.push() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>.ready()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.ready() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>.toArray()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.toArray() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>validateFrame()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>push()</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>validateFrame() node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>sequenceBuffer.js</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>recognizer.js</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>sequenceBuffer.test.js</code><br><small style="color:var(--muted)">usuario/tests/sequenceBuffer.test.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>sequenceBuffer.js node in src/reconocimiento/sequenceBuffer.js.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>sequenceBuffer.test.js</code><br><small style="color:var(--muted)">usuario/tests/sequenceBuffer.test.js</small></td>
+  <td><span class="tag tag-func">Test</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>SequenceBuffer</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small><br><code>sequenceBuffer.js</code><br><small style="color:var(--muted)">src/reconocimiento/sequenceBuffer.js</small></td>
+  <td>Verifies imports, entry points, or version behavior.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/reconocimiento/sequenceBuffer.js</code></td><td>8 nodes</td></tr>
+<tr><td><code>src/reconocimiento/inputShape.js</code></td><td>5 nodes</td></tr>
+<tr><td><code>src/reconocimiento/inferenceAdapter.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>usuario/tests/inputShape.test.js</code></td><td>1 nodes</td></tr>
+<tr><td><code>usuario/tests/sequenceBuffer.test.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x7, contains x7, imports x3, imports x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Reglas de desarrollo de AulaSenas2 ====== -->
+<h2 id="reglas-de-desarrollo-de-aulasenas2">6. Reglas de desarrollo de AulaSenas2</h2>
+<p>Reglas de desarrollo de AulaSenas2 groups implementation around agentsmd, aplicaciones, dependencias, forma, mostly in AGENTS.md. This section covers 9 nodes and 8 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Reglas de desarrollo de AulaSenas2 (9 nodes, 8 edges)
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390("Reglas de desarrollo de AulaSenas2<br/><small>AGENTS.md</small>")
+    agents_e7052aeb("AGENTS.md")
+    agents_ubicaci_n_obligatoria_c1563ab3("Ubicación obligatoria<br/><small>AGENTS.md</small>")
+    agents_dependencias_91d60a85("Dependencias<br/><small>AGENTS.md</small>")
+    agents_regla_principal_e68fbd5f("Regla principal<br/><small>AGENTS.md</small>")
+    agents_prohibiciones_59878f03("Prohibiciones<br/><small>AGENTS.md</small>")
+    agents_aplicaciones_1660ef36("Aplicaciones<br/><small>AGENTS.md</small>")
+    agents_forma_de_trabajo_536d52db("Forma de trabajo<br/><small>AGENTS.md</small>")
+    agents_graphify_933e8fd9("graphify<br/><small>AGENTS.md</small>")
+    agents_e7052aeb -->|contains| agents_reglas_de_desarrollo_de_aulasenas2_f135a390
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_ubicaci_n_obligatoria_c1563ab3
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_dependencias_91d60a85
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_regla_principal_e68fbd5f
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_prohibiciones_59878f03
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_forma_de_trabajo_536d52db
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_graphify_933e8fd9
+    agents_reglas_de_desarrollo_de_aulasenas2_f135a390 -->|contains| agents_aplicaciones_1660ef36
+    class agents_reglas_de_desarrollo_de_aulasenas2_f135a390 concept;
+    class agents_e7052aeb concept;
+    class agents_ubicaci_n_obligatoria_c1563ab3 concept;
+    class agents_dependencias_91d60a85 concept;
+    class agents_regla_principal_e68fbd5f concept;
+    class agents_prohibiciones_59878f03 concept;
+    class agents_aplicaciones_1660ef36 concept;
+    class agents_forma_de_trabajo_536d52db concept;
+    class agents_graphify_933e8fd9 concept;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>AGENTS.md</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing AGENTS.md.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>Aplicaciones</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Aplicaciones.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Dependencias</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Dependencias.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Forma de trabajo</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Forma de trabajo.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>graphify</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing graphify.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Prohibiciones</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Prohibiciones.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Regla principal</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Regla principal.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>Reglas de desarrollo de AulaSenas2</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Reglas de desarrollo de AulaSenas2.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Ubicación obligatoria</code><br><small style="color:var(--muted)">AGENTS.md</small></td>
+  <td><span class="tag tag-func">Concept</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Documentation node describing Ubicación obligatoria.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>AGENTS.md</code></td><td>9 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x8. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. MediaPipeAdapter ====== -->
+<h2 id="mediapipeadapter">7. MediaPipeAdapter</h2>
+<p>MediaPipeAdapter groups implementation around mediapipeadapterjs, apps, usuario, vision, mostly in src/vision/mediapipeAdapter.js. This section covers 6 nodes and 5 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: MediaPipeAdapter (6 nodes, 5 edges)
+    apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce("MediaPipeAdapter<br/><small>src/vision/mediapipeAdapter.js</small>")
+    apps_usuario_src_vision_mediapipeadapter_mediapi_158516a3("constructor()<br/><small>src/vision/mediapipeAdapter.js</small>")
+    apps_usuario_src_vision_mediapipeadapter_mediapi_e9bd713f("initialize()<br/><small>src/vision/mediapipeAdapter.js</small>")
+    apps_usuario_src_vision_mediapipeadapter_mediapi_e09403eb("process()<br/><small>src/vision/mediapipeAdapter.js</small>")
+    apps_usuario_src_vision_mediapipeadapter_mediapi_f35cf8f0("close()<br/><small>src/vision/mediapipeAdapter.js</small>")
+    apps_usuario_src_vision_mediapipeadapter_e5d4f0f4("mediapipeAdapter.js")
+    apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce -->|method| apps_usuario_src_vision_mediapipeadapter_mediapi_158516a3
+    apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce -->|method| apps_usuario_src_vision_mediapipeadapter_mediapi_e9bd713f
+    apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce -->|method| apps_usuario_src_vision_mediapipeadapter_mediapi_e09403eb
+    apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce -->|method| apps_usuario_src_vision_mediapipeadapter_mediapi_f35cf8f0
+    class apps_usuario_src_vision_mediapipeadapter_mediapi_56712bce api;
+    class apps_usuario_src_vision_mediapipeadapter_mediapi_158516a3 function;
+    class apps_usuario_src_vision_mediapipeadapter_mediapi_e9bd713f function;
+    class apps_usuario_src_vision_mediapipeadapter_mediapi_e09403eb function;
+    class apps_usuario_src_vision_mediapipeadapter_mediapi_f35cf8f0 function;
+    class apps_usuario_src_vision_mediapipeadapter_e5d4f0f4 api;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>MediaPipeAdapter</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>close()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small><br><code>constructor()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small><br><code>initialize()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small><br>+1 more</td>
+  <td>MediaPipeAdapter node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>.close()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>MediaPipeAdapter</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.close() node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>MediaPipeAdapter</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>.initialize()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>MediaPipeAdapter</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.initialize() node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>.process()</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>MediaPipeAdapter</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.process() node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>mediapipeAdapter.js</code><br><small style="color:var(--muted)">src/vision/mediapipeAdapter.js</small></td>
+  <td><span class="tag tag-endpoint">API</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>mediapipeAdapter.js node in src/vision/mediapipeAdapter.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/vision/mediapipeAdapter.js</code></td><td>6 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x4, contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. SignRecognizer ====== -->
+<h2 id="signrecognizer">8. SignRecognizer</h2>
+<p>SignRecognizer groups implementation around apps, usuario, reconocimiento, recognizerjs, mostly in src/reconocimiento/recognizer.js, usuario/src/main.js. This section covers 5 nodes and 4 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: SignRecognizer (5 nodes, 4 edges)
+    subgraph signrecognizer_src_reconocimiento_recognizer_js_67f55a08["src/reconocimiento/recognizer.js"]
+        apps_usuario_src_reconocimiento_recognizer_signr_cba03ca7("SignRecognizer<br/><small>src/reconocimiento/recognizer.js</small>")
+        apps_usuario_src_reconocimiento_recognizer_signr_022ec159("reset()<br/><small>src/reconocimiento/recognizer.js</small>")
+        apps_usuario_src_reconocimiento_recognizer_signr_a99ce3b8("constructor()<br/><small>src/reconocimiento/recognizer.js</small>")
+        apps_usuario_src_reconocimiento_recognizer_signr_fc1d9937("process()<br/><small>src/reconocimiento/recognizer.js</small>")
+    end
+    apps_usuario_src_main_camera_21340d81("camera<br/><small>usuario/src/main.js</small>")
+    apps_usuario_src_reconocimiento_recognizer_signr_cba03ca7 -->|method| apps_usuario_src_reconocimiento_recognizer_signr_022ec159
+    apps_usuario_src_reconocimiento_recognizer_signr_cba03ca7 -->|method| apps_usuario_src_reconocimiento_recognizer_signr_a99ce3b8
+    apps_usuario_src_reconocimiento_recognizer_signr_cba03ca7 -->|method| apps_usuario_src_reconocimiento_recognizer_signr_fc1d9937
+    class apps_usuario_src_reconocimiento_recognizer_signr_cba03ca7 klass;
+    class apps_usuario_src_reconocimiento_recognizer_signr_022ec159 function;
+    class apps_usuario_src_reconocimiento_recognizer_signr_a99ce3b8 function;
+    class apps_usuario_src_reconocimiento_recognizer_signr_fc1d9937 function;
+    class apps_usuario_src_main_camera_21340d81 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>SignRecognizer</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>main.js</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><code>constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>process()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>processLandmarks()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br>+1 more</td>
+  <td>SignRecognizer node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SignRecognizer</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>.process()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>camera</code><br><small style="color:var(--muted)">usuario/src/main.js</small><br><code>SignRecognizer</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.process() node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>.reset()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SignRecognizer</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.reset() node in src/reconocimiento/recognizer.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>camera</code><br><small style="color:var(--muted)">usuario/src/main.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>process()</code><br><small style="color:var(--muted)">src/reconocimiento/recognizer.js</small><br><code>setCameraStatus()</code><br><small style="color:var(--muted)">src/ui/interface.js</small></td>
+  <td>camera node in usuario/src/main.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/reconocimiento/recognizer.js</code></td><td>4 nodes</td></tr>
+<tr><td><code>usuario/src/main.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x3. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 9. LandmarkExtractor ====== -->
+<h2 id="landmarkextractor">9. LandmarkExtractor</h2>
+<p>LandmarkExtractor groups implementation around landmarksjs, apps, usuario, vision, mostly in src/vision/landmarks.js. This section covers 5 nodes and 4 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: LandmarkExtractor (5 nodes, 4 edges)
+    apps_usuario_src_vision_landmarks_landmarkextrac_c898de3a("LandmarkExtractor<br/><small>src/vision/landmarks.js</small>")
+    apps_usuario_src_vision_landmarks_landmarkextrac_616c44ae("constructor()<br/><small>src/vision/landmarks.js</small>")
+    apps_usuario_src_vision_landmarks_landmarkextrac_f782bc98("initialize()<br/><small>src/vision/landmarks.js</small>")
+    apps_usuario_src_vision_landmarks_landmarkextrac_0c5357d5("extract()<br/><small>src/vision/landmarks.js</small>")
+    apps_usuario_src_vision_landmarks_0f41e6be("landmarks.js")
+    apps_usuario_src_vision_landmarks_landmarkextrac_c898de3a -->|method| apps_usuario_src_vision_landmarks_landmarkextrac_616c44ae
+    apps_usuario_src_vision_landmarks_landmarkextrac_c898de3a -->|method| apps_usuario_src_vision_landmarks_landmarkextrac_f782bc98
+    apps_usuario_src_vision_landmarks_landmarkextrac_c898de3a -->|method| apps_usuario_src_vision_landmarks_landmarkextrac_0c5357d5
+    class apps_usuario_src_vision_landmarks_landmarkextrac_c898de3a klass;
+    class apps_usuario_src_vision_landmarks_landmarkextrac_616c44ae function;
+    class apps_usuario_src_vision_landmarks_landmarkextrac_f782bc98 function;
+    class apps_usuario_src_vision_landmarks_landmarkextrac_0c5357d5 function;
+    class apps_usuario_src_vision_landmarks_0f41e6be module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>LandmarkExtractor</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>constructor()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small><br><code>extract()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small><br><code>initialize()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td>LandmarkExtractor node in src/vision/landmarks.js.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>.constructor()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>LandmarkExtractor</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.constructor() node in src/vision/landmarks.js.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>.extract()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>LandmarkExtractor</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.extract() node in src/vision/landmarks.js.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>.initialize()</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>LandmarkExtractor</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td>No direct outbound edge</td>
+  <td>.initialize() node in src/vision/landmarks.js.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>landmarks.js</code><br><small style="color:var(--muted)">src/vision/landmarks.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>landmarks.js node in src/vision/landmarks.js.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/vision/landmarks.js</code></td><td>5 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: method x3, contains x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>105</td></tr>
+      <tr><td>Edges</td><td>138</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>11</td></tr>
+      <tr><td>Documented Sections</td><td>8</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>132</td></tr>
+      <tr><td>INFERRED</td><td>6</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>AulaSenas2 — Architecture Documentation</p>
+  <p>Generated: 2026-09-12 03:29 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>
