@@ -55,3 +55,33 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+
+DOCUMENTACIÓN DEL CÓDIGO
+
+Todo código nuevo o modificado debe quedar suficientemente documentado para que otro desarrollador pueda entender:
+
+- propósito del módulo;
+- responsabilidad de cada función pública o compleja;
+- entradas y salidas;
+- estados importantes;
+- decisiones no obvias;
+- dependencias relevantes;
+- contratos o restricciones que no sean evidentes por el código.
+
+La documentación debe vivir lo más cerca posible del código:
+- comentarios/JSDoc para funciones y módulos;
+- comentarios internos solo donde la lógica no sea evidente.
+
+No comentar línea por línea ni explicar código trivial.
+Los comentarios deben explicar el POR QUÉ y el contrato de la lógica, no repetir literalmente el QUÉ.
+
+Si una modificación cambia comportamiento, arquitectura o contrato, actualizar también la documentación externa correspondiente.
+
+## AulaSenas2-Lite
+
+La arquitectura vigente es AulaSenas2-Lite y su contrato rector es `docs/AULASENAS2_LITE_CONTRATO.md`. Cuando exista contradicción entre documentación legacy y dicho contrato, prevalece el contrato Lite.
+
+La transición se ejecutará estrictamente en este orden: FASE I — modificación del Configurador; FASE II — contratos y documentación; FASE III — refundación de Usuario; FASE IV — captura del nuevo dataset; FASE V — nuevo pipeline Training/Colab; FASE VI — integración y prueba física. No se adelantará ninguna fase sin autorización explícita.
+
+Quedan cancelados `USR-06.7`, las optimizaciones incrementales del runtime Holistic, la continuidad productiva de F319 y GRU-CTC/F308, y cualquier estrategia destinada a conservar compatibilidad con esos runtimes. El legacy se eliminará físicamente del árbol activo cuando corresponda; Git conserva su historial.
