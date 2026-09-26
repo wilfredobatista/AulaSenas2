@@ -1,0 +1,38 @@
+{
+  "featureContract": "AULASENAS2_LITE_F139_V1",
+  "input": {
+    "T": 20,
+    "F": 139
+  },
+  "temporal": {
+    "targetFps": 12,
+    "runtimeExpectedFpsRange": [
+      10,
+      12
+    ],
+    "deltaMsNormRecomputedAfterResampling": true
+  },
+  "model": {
+    "type": "GRU",
+    "units": 64,
+    "stateful": false,
+    "returnSequences": false,
+    "resetAfter": false,
+    "outputClasses": 12,
+    "activation": "softmax"
+  },
+  "class_to_index": {
+    "ruido_background": 0,
+    "BIEN": 1,
+    "BUENAS_NOCHES": 2,
+    "BUENAS_TARDES": 3,
+    "BUENOS_DIAS": 4,
+    "COMO_ESTAS": 5,
+    "CUAL_ES_TU_NOMBRE": 6,
+    "GRACIAS": 7,
+    "HASTA_MANANA": 8,
+    "LO_SIENTO": 9,
+    "MI_NOMBRE": 10,
+    "PERMISO": 11
+  }
+}

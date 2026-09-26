@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/sign-class.schema.json",
+  "title": "Clase AulaSenas2-Lite",
+  "description": "Identidad humana estable de una clase visual Lite. classId identifica la clase en filesystem y dataset; no se deriva de índices artificiales ni cambia al editar la metadata.",
+  "oneOf": [{ "$ref": "#/$defs/normal" }, { "$ref": "#/$defs/ruidoBackground" }],
+  "$defs": {
+    "classIdNormal": { "type": "string", "pattern": "^(?!U[0-9]+$)[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$" },
+    "base": {
+      "type": "object",
+      "required": ["classId", "glosa", "estado", "tipo"],
+      "properties": {
+        "classId": { "type": "string", "minLength": 1 },
+        "glosa": { "type": "string", "minLength": 1 },
+        "significados": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "estado": { "enum": ["activa", "inactiva"] },
+        "tipo": { "enum": ["normal", "ruido_background"] }
+      },
+      "additionalProperties": false
+    },
+    "normal": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        { "properties": { "classId": { "$ref": "#/$defs/classIdNormal" }, "tipo": { "const": "normal" } } }
+      ]
+    },
+    "ruidoBackground": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        { "properties": { "classId": { "const": "ruido_background" }, "glosa": { "const": "ruido_background" }, "tipo": { "const": "ruido_background" }, "significados": { "maxItems": 0 } } }
+      ]
+    }
+  }
+}

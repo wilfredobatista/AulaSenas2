@@ -1,3 +1,0 @@
-/** Convierte logits por timestep en confianza media y aplica el umbral anti-ruido. */
-export function confidenceFromLogits(logits) { if (!Array.isArray(logits) || logits.length === 0) return 0; const values = logits.map((row) => { const max = Math.max(...row); const exps = row.map((value) => Math.exp(value - max)); const total = exps.reduce((sum, value) => sum + value, 0); return Math.max(...exps) / total; }); return values.reduce((sum, value) => sum + value, 0) / values.length; }
-export function acceptPrediction({ label, confidence, threshold = 0.8, lastLabel = '' }) { return Boolean(label && confidence >= threshold && label !== lastLabel); }

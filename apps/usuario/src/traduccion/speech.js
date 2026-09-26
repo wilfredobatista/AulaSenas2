@@ -1,2 +1,0 @@
-/** Adaptador de la API nativa SpeechSynthesis. Entrada: texto; salida: booleano de disponibilidad. */
-export class SpeechService { constructor(preferences) { this.preferences = preferences; } speak(text) { if (!text || !('speechSynthesis' in window)) return false; window.speechSynthesis.cancel(); const utterance = new SpeechSynthesisUtterance(text); utterance.lang = this.preferences.get('voiceLanguage'); window.speechSynthesis.speak(utterance); return true; } }

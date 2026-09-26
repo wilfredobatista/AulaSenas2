@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/lite-raw.schema.json",
+  "title": "Observación raw AulaSenas2-Lite",
+  "description": "Observación Lite mínima: Hands izquierda/derecha y los puntos Pose nariz, hombro izquierdo y hombro derecho. No admite rostro, Holistic u otros landmarks.",
+  "type": "object",
+  "required": ["hands", "pose"],
+  "properties": {
+    "hands": { "type": "object", "required": ["left", "right"], "properties": { "left": { "$ref": "lite-hand.schema.json" }, "right": { "$ref": "lite-hand.schema.json" } }, "additionalProperties": false },
+    "pose": { "type": "object", "required": ["nose", "leftShoulder", "rightShoulder"], "properties": { "nose": { "$ref": "lite-point.schema.json" }, "leftShoulder": { "$ref": "lite-point.schema.json" }, "rightShoulder": { "$ref": "lite-point.schema.json" } }, "additionalProperties": false }
+  },
+  "additionalProperties": false
+}

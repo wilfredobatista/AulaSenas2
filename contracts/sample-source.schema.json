@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/sample-source.schema.json",
+  "title": "Fuente de muestra Lite",
+  "oneOf": [
+    { "type": "object", "required": ["tipo"], "properties": { "tipo": { "const": "camera" } }, "additionalProperties": false },
+    { "type": "object", "required": ["tipo", "video"], "properties": { "tipo": { "const": "video" }, "video": { "type": "object", "required": ["nombreArchivo", "inicioSegmentoMs", "finSegmentoMs", "duracionSegmentoMs"], "properties": { "nombreArchivo": { "type": "string", "minLength": 1 }, "inicioSegmentoMs": { "type": "number", "minimum": 0 }, "finSegmentoMs": { "type": "number", "minimum": 0 }, "duracionSegmentoMs": { "type": "number", "minimum": 0 } }, "additionalProperties": false } }, "additionalProperties": false }
+  ],
+  "x-aulasenas-invariants": ["fuente.video.finSegmentoMs >= fuente.video.inicioSegmentoMs", "fuente.video.duracionSegmentoMs === finSegmentoMs - inicioSegmentoMs"]
+}

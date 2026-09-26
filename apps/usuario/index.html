@@ -1,89 +1,23 @@
 <!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>AulaSeñas | Usuario</title>
-    <link rel="stylesheet" href="src/ui/styles.css">
-</head>
-
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AulaSeñas | Usuario</title><link rel="stylesheet" href="src/ui/styles.css"></head>
 <body>
-    <header>
-        <div class="identidad-aplicacion">
-            <h1>Traductor LSP a Texto</h1>
-            <h3>Bienvenido a AulaSeñas</h3>
-            <p>Herramienta inteligente para apoyar la comunicación escolar mediante traducción de Lengua de Señas
-                Panameña a texto.</p>
-        </div>
-        <nav class="navegacion-aplicacion"><span class="boton-vista activo">Modo usuario</span><button
-                id="settings-button" class="boton-vista" type="button">Preferencias</button></nav>
-    </header>
-    <main>
-        <div class="area-trabajo-compartida">
-            <section id="camara">
-                <h2>Cámara</h2>
-                <div id="vista-camara"><video id="camera" autoplay muted playsinline></video>
-                    <div id="camera-placeholder">
-                        <p>Cámara inactiva</p>
-                    </div><span id="recording-badge" hidden>● EN VIVO</span>
-                </div>
-                <div class="camera-actions"><button id="camera-toggle" class="boton-camara-principal">Iniciar
-                        traducción</button><button id="clear-button" class="boton-camara-secundario">Limpiar
-                        texto</button></div>
-                <p id="camera-status">Estado: esperando inicio</p>
-                <div class="camera-foot"><span id="recognition-status">Reconocimiento inactivo</span><span
-                        id="model-status">Modelo no disponible</span></div>
-            </section>
-            <section id="vista-usuario">
-                <h2 class="titulo-vista">Modo usuario</h2>
-                <section id="traduccion">
-                    <div class="encabezado-traduccion">
-                        <h2>Traducción</h2><span id="translation-status">Pendiente</span>
-                    </div>
-                    <section id="panel-texto-acumulado">
-                        <h3>Texto reconocido</h3>
-                        <div id="transcript" data-empty="true" aria-live="polite">Sin texto acumulado</div>
-                    </section>
-                    <section id="panel-reconocimiento">
-                        <h3>Reconocimiento</h3>
-                        <p><span>Estado:</span><output id="recognition-detail">Sin inferencia activa</output></p>
-                        <p><span>Confianza:</span><output>--</output></p>
-                    </section>
-                    <section id="panel-texto-interpretado">
-                        <div class="encabezado-panel">
-                            <h3>Texto interpretado</h3><span id="interpretation-status">Pendiente</span>
-                        </div>
-                        <div id="interpretation" data-empty="true" aria-live="polite">Sin texto interpretado</div>
-                        <button id="speak-button" class="boton-voz" disabled>🔊 Reproducir voz</button>
-                    </section>
-                </section>
-            </section>
-        </div>
-    </main>
-    <footer></footer>
-    <dialog id="settings-dialog">
-        <form method="dialog">
-            <div class="encabezado-panel">
-                <h2>Preferencias</h2><button class="cerrar-dialogo">×</button>
-            </div><label>Idioma de voz<select id="voice-language">
-                    <option value="es-PA">Español (Panamá)</option>
-                    <option value="es-ES">Español</option>
-                </select></label><label class="check"><input id="auto-speak" type="checkbox"> Reproducir
-                automáticamente</label><button class="boton-camara-principal">Guardar</button>
-        </form>
-    </dialog>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic/holistic.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js" crossorigin="anonymous"></script>
-    <script src="src/vision/heuristicRules.js"></script>
-    <script src="src/vision/handsConfig.js"></script>
-    <script src="src/vision/normalizer.js"></script>
-    <script src="src/vision/handsDetector.js"></script>
-    <script src="src/reconocimiento/gruCtcModelLoader.js"></script>
-    <script src="src/reconocimiento/gruCtcStreamingRecognizer.js"></script>
-    <script type="module" src="src/main.js"></script>
-</body>
-
-</html>
+  <header>
+    <div class="identidad-aplicacion"><h1>Traductor LSP a Texto</h1><h3>Bienvenido a AulaSeñas</h3><p>Herramienta de comunicación escolar. La detección física Lite está activa; el reconocimiento lingüístico se integrará en una fase posterior.</p></div>
+    <nav class="navegacion-aplicacion"><span class="boton-vista activo">Modo usuario</span><button class="boton-vista" type="button" disabled title="Disponible en una fase posterior">Preferencias</button></nav>
+  </header>
+  <main><div class="area-trabajo-compartida">
+    <section id="camara"><h2>Cámara</h2>
+      <div id="vista-camara"><video id="camera" autoplay muted playsinline></video><canvas id="overlay" aria-hidden="true"></canvas><div id="camera-placeholder"><p>Cámara inactiva</p></div><span id="recording-badge" hidden>● EN VIVO</span></div>
+      <div class="camera-actions"><button id="camera-toggle" class="boton-camara-principal" type="button">Iniciar cámara</button><button id="stop-camera" class="boton-camara-secundario" type="button">Detener cámara</button></div>
+      <p id="camera-status">Estado: esperando inicio</p><div class="camera-foot"><span id="hands-status">Hands: pendiente</span><span id="pose-status">Pose: pendiente</span></div>
+    </section>
+    <section id="vista-usuario"><h2 class="titulo-vista">Modo usuario</h2><section id="traduccion">
+      <div class="encabezado-traduccion"><h2>Traducción</h2><span class="estado-panel">Pendiente de modelo Lite</span></div>
+      <section id="panel-texto-acumulado"><h3>Texto reconocido</h3><div id="transcript" data-empty="true" aria-live="polite">—</div></section>
+      <section id="panel-reconocimiento"><h3>Pipeline Lite</h3><p><span>F139:</span><output id="frame-status">Pendiente</output></p><p><span>Ventana:</span><output id="fifo-status">FIFO: 0 / 20</output></p></section>
+      <section id="panel-texto-interpretado"><div class="encabezado-panel"><h3>Texto contextualizado</h3><span class="estado-panel">No disponible todavía</span></div><div id="interpretation" data-empty="true" aria-live="polite">—</div><button class="boton-voz" type="button" disabled>🔊 Reproducir voz</button></section>
+      <details id="diagnostico-lite"><summary>Diagnóstico técnico Lite</summary><p><span>Modelo:</span> <output id="model-status">Modelo: pendiente</output></p><p><span>Última predicción:</span> <output id="prediction-status">—</output></p><pre id="metrics">{}</pre></details>
+    </section></section>
+  </div></main><footer></footer><script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js" crossorigin="anonymous"></script><script type="module" src="src/main.js"></script>
+</body></html>

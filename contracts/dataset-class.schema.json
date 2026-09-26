@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/dataset-class.schema.json",
+  "title": "Archivo de clase validado AulaSenas2-Lite",
+  "type": "object",
+  "required": ["featureContract", "clase", "muestras"],
+  "properties": {
+    "featureContract": { "const": "AULASENAS2_LITE_F139_V1" },
+    "clase": { "$ref": "sign-class.schema.json" },
+    "muestras": { "type": "array", "items": { "allOf": [{ "$ref": "captured-sample.schema.json" }, { "required": ["id", "stage"], "properties": { "stage": { "const": "validated" } } }] } }
+  },
+  "additionalProperties": false,
+  "x-aulasenas-invariants": ["Cada muestra.classId es igual a clase.classId", "Los id de muestras son únicos dentro del archivo", "muestras puede ser [] para preservar una clase sin capturas."]
+}

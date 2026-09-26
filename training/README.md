@@ -33,4 +33,16 @@ apps/usuario/          aplicación consumidora del modelo
 
 ## Alcance reservado
 
-Las subcarpetas `configuracion/`, `notebooks/`, `scripts/`, `resultados/` y `tests/` permanecen como espacios reservados para futuras herramientas offline, configuraciones, reportes y pruebas del proceso de entrenamiento. No se inventan scripts, dependencias, métricas ni modelos en esta etapa.
+Las subcarpetas `configuracion/`, `notebooks/`, `scripts/`, `resultados/` y `tests/` permanecen destinadas a herramientas offline, configuraciones, reportes y pruebas del proceso de entrenamiento.
+
+## TRAIN-02: preparación de entrada
+
+TRAIN-02 implementa únicamente el lector, la normalización respecto al torso, la vectorización variable `[T,319]`, el split piloto y sus diagnósticos. No entrena ni selecciona ningún modelo y usa exclusivamente `frame.observacion` del dataset validado.
+
+Desde la raíz del repositorio, localmente o en Google Colab:
+
+```bash
+python training/run_train02.py --dataset data/validated/default --seed 42
+```
+
+Los reportes se escriben en `training/resultados/train02/`. La implementación usa solo la biblioteca estándar de Python, por lo que TRAIN-02 no añade dependencias a `requirements.txt`.

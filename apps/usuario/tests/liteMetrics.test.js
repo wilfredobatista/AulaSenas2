@@ -1,0 +1,4 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { RuntimeMetrics } from '../src/metrics/RuntimeMetrics.js';
+test('métricas Lite miden throughput real, deltas, presencia y FIFO', () => { let now=0; const metrics=new RuntimeMetrics(()=>now); const vector=new Float32Array(139); vector[135]=1; vector[136]=1; vector[137]=1; metrics.cameraFrame(); metrics.pipelineFrame(); now=100; metrics.result({valid:true,deltaMs:0,vector139:vector,latencyMs:20,fifoReady:false}); now=1100; metrics.result({valid:true,deltaMs:1000,vector139:vector,latencyMs:30,fifoReady:true}); const report=metrics.report(20); assert.equal(report.validF139,2); assert.equal(report.discardedF139,0); assert.equal(report.presence.bothPercent,100); assert.equal(report.fifo.ready,true); assert.equal(report.latency.p95Ms,30); assert.equal(report.delta.maxMs,1000); });

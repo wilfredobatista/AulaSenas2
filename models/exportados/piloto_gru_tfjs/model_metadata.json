@@ -1,0 +1,26 @@
+{
+  "modelId": "piloto_gru_tfjs",
+  "format": "tensorflowjs_layers_model",
+  "input": {
+    "name": "secuencia",
+    "shape": [
+      128,
+      319
+    ],
+    "targetT": 128,
+    "featureDim": 319
+  },
+  "output": {
+    "name": "clasificacion",
+    "numClasses": 6,
+    "activation": "softmax"
+  },
+  "files": {
+    "model": "model.json",
+    "classMapping": "class_mapping.json",
+    "weights": [
+      "group1-shard1of1.bin"
+    ]
+  },
+  "backgroundClassId": "ruido_background"
+}

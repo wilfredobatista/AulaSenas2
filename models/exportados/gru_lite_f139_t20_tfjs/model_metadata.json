@@ -1,0 +1,46 @@
+{
+  "modelId": "gru_lite_f139_t20_tfjs",
+  "featureContract": "AULASENAS2_LITE_F139_V1",
+  "format": "tensorflowjs_layers_model",
+  "input": {
+    "shape": [
+      null,
+      20,
+      139
+    ],
+    "dtype": "float32"
+  },
+  "output": {
+    "shape": [
+      null,
+      12
+    ],
+    "activation": "softmax"
+  },
+  "runtime": {
+    "modelLoader": "tf.loadLayersModel",
+    "fifoLength": 20,
+    "expectedF139PerSecond": [
+      10,
+      12
+    ]
+  },
+  "gru": {
+    "units": 64,
+    "stateful": false,
+    "returnSequences": false,
+    "resetAfter": false
+  },
+  "files": {
+    "model": "model.json",
+    "weights": "group1-shard1of1.bin",
+    "classMapping": "class_mapping.json"
+  },
+  "backgroundClassId": "ruido_background",
+  "validation": {
+    "testAccuracy": 1.0,
+    "testSamples": 48,
+    "testCorrect": 48,
+    "tfjsParityMaxAbsError": 4.656612873077393e-10
+  }
+}

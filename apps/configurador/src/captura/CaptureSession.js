@@ -1,31 +1,37 @@
-/** Muestrea un video y conserva frames con timestamp y landmarks externos. */
+import { LiteTemporalEncoder } from '../vision/LiteVectorizer139.js';
+
+/** Captura observaciones Lite válidas sin solapar inferencias. */
 export class CaptureSession {
-  /**
-   * @param {object} options Opciones de captura.
-   * @param {HTMLVideoElement} options.video Video en reproducción.
-   * @param {(video: HTMLVideoElement) => Promise<unknown>|unknown} options.extractLandmarks
-   * Extractor inyectable; su forma de salida pertenece a landmarks.schema.json.
-   * @param {number} [options.intervalMs=100] Periodo de muestreo.
-   */
+  /** El extractor inyectable recibe el video y el timestamp previo a inferencia. */
   constructor({ video, extractLandmarks, intervalMs = 100 }) {
     this.video = video; this.extractLandmarks = extractLandmarks; this.intervalMs = intervalMs;
-    this.frames = []; this.timer = null; this.startedAt = null;
+    this.frames = []; this.timer = null; this.startedAt = null; this.durationMs = 0; this.pending = null; this.encoder = new LiteTemporalEncoder();
   }
-  /** Inicia el temporizador de muestreo y reinicia los frames de la sesión. */
+  /** Inicia una sesión nueva y elimina todo estado temporal de la anterior. */
   start() {
     if (this.timer) throw new Error('La captura ya está activa.');
     if (typeof this.extractLandmarks !== 'function') throw new Error('No hay extractor de landmarks configurado.');
-    this.frames = []; this.startedAt = performance.now();
+    this.frames = []; this.encoder.reset(); this.startedAt = performance.now(); this.durationMs = 0; this.pending = null; this.lastError = null;
     this.timer = setInterval(() => this.#captureFrame(), this.intervalMs);
   }
-  /** Detiene el muestreo y devuelve una copia de los frames capturados. */
-  stop() { clearInterval(this.timer); this.timer = null; return this.frames.slice(); }
-  /** Ejecuta una extracción; los errores quedan en lastError y no detienen la sesión. */
+  /** Detiene el muestreo, espera la inferencia actual y devuelve solo frames válidos. */
+  async stop() {
+    const stoppedAt = performance.now(); clearInterval(this.timer); this.timer = null;
+    if (this.pending) await this.pending;
+    this.durationMs = Math.max(0, Math.round(stoppedAt - this.startedAt));
+    return this.frames.slice();
+  }
+  /** Un pending único impide inferencias simultáneas; un descarte no agrega fila. */
   async #captureFrame() {
     try {
-      const landmarks = await this.extractLandmarks(this.video);
-      if (landmarks == null) return;
-      this.frames.push({ timestampMs: Math.round(performance.now() - this.startedAt), landmarks });
+      if (this.pending) return;
+      this.pending = (async () => {
+        const sourceTimestampMs = performance.now();
+        const extraction = await this.extractLandmarks(this.video, { sourceTimestampMs });
+        const frame = this.encoder.encode(extraction);
+        if (frame) this.frames.push(frame);
+      })().catch((error) => { this.lastError = error; }).finally(() => { this.pending = null; });
+      await this.pending;
     } catch (error) { this.lastError = error; }
   }
 }

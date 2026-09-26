@@ -1,0 +1,207 @@
+{
+  "communities": {
+    "0": [
+      "apps_usuario_src_main",
+      "apps_usuario_src_main_preferences",
+      "apps_usuario_src_main_speech",
+      "apps_usuario_src_main_translator",
+      "apps_usuario_src_main_ui",
+      "apps_usuario_src_reconocimiento_modelloader",
+      "apps_usuario_src_reconocimiento_modelloader_modelloader",
+      "apps_usuario_src_reconocimiento_modelloader_modelloader_available",
+      "apps_usuario_src_reconocimiento_modelloader_modelloader_constructor",
+      "apps_usuario_src_reconocimiento_modelloader_modelloader_load",
+      "apps_usuario_src_traduccion_speech",
+      "apps_usuario_src_traduccion_speech_speechservice",
+      "apps_usuario_src_traduccion_speech_speechservice_constructor",
+      "apps_usuario_src_traduccion_speech_speechservice_speak",
+      "apps_usuario_src_traduccion_translator",
+      "apps_usuario_src_traduccion_translator_translator",
+      "apps_usuario_src_traduccion_translator_translator_interpret",
+      "apps_usuario_src_vision_mediapipeadapter",
+      "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter",
+      "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter_close",
+      "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter_constructor",
+      "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter_initialize",
+      "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter_process"
+    ],
+    "1": [
+      "apps_usuario_src_main_loader",
+      "apps_usuario_src_main_recognizer",
+      "apps_usuario_src_main_vision",
+      "apps_usuario_src_ui_interface",
+      "apps_usuario_src_ui_interface_userinterface",
+      "apps_usuario_src_ui_interface_userinterface_addrecognition",
+      "apps_usuario_src_ui_interface_userinterface_bind",
+      "apps_usuario_src_ui_interface_userinterface_constructor",
+      "apps_usuario_src_ui_interface_userinterface_setcamerastatus",
+      "apps_usuario_src_ui_interface_userinterface_setmodelstatus",
+      "apps_usuario_src_ui_interface_userinterface_setrecognitionstatus",
+      "apps_usuario_src_ui_interface_userinterface_settext",
+      "apps_usuario_src_ui_interface_userinterface_setvisionstatus"
+    ],
+    "2": [
+      "apps_usuario_src_reconocimiento_confidence",
+      "apps_usuario_src_reconocimiento_confidence_acceptprediction",
+      "apps_usuario_src_reconocimiento_confidence_confidencefromlogits",
+      "apps_usuario_src_reconocimiento_ctcdecoder",
+      "apps_usuario_src_reconocimiento_ctcdecoder_greedyctcdecode",
+      "apps_usuario_src_reconocimiento_recognizer",
+      "apps_usuario_src_reconocimiento_recognizer_signrecognizer_processlandmarks",
+      "apps_usuario_src_vision_normalizer",
+      "apps_usuario_src_vision_normalizer_appenddeltamsnorm",
+      "apps_usuario_src_vision_normalizer_normalizelandmarks",
+      "apps_usuario_tests_ctcdecoder_test"
+    ],
+    "3": [
+      "apps_usuario_src_reconocimiento_inferenceadapter",
+      "apps_usuario_src_reconocimiento_inferenceadapter_inferenceadapter",
+      "apps_usuario_src_reconocimiento_inferenceadapter_inferenceadapter_constructor",
+      "apps_usuario_src_reconocimiento_inferenceadapter_inferenceadapter_infer",
+      "apps_usuario_src_reconocimiento_inputshape",
+      "apps_usuario_src_reconocimiento_inputshape_frame_features",
+      "apps_usuario_src_reconocimiento_inputshape_landmark_features",
+      "apps_usuario_src_reconocimiento_inputshape_temporal_length",
+      "apps_usuario_src_reconocimiento_inputshape_validatetemporalinput",
+      "apps_usuario_tests_inputshape_test"
+    ],
+    "4": [
+      "apps_usuario_src_reconocimiento_sequencebuffer",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer_clear",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer_constructor",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer_push",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer_ready",
+      "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer_toarray",
+      "apps_usuario_src_reconocimiento_sequencebuffer_validateframe",
+      "apps_usuario_tests_sequencebuffer_test"
+    ],
+    "5": [
+      "apps_usuario_package",
+      "apps_usuario_package_name",
+      "apps_usuario_package_private",
+      "apps_usuario_package_scripts",
+      "apps_usuario_package_scripts_check",
+      "apps_usuario_package_scripts_test",
+      "apps_usuario_package_type",
+      "apps_usuario_package_version"
+    ],
+    "6": [
+      "apps_usuario_src_configuracion_preferences",
+      "apps_usuario_src_configuracion_preferences_userpreferences",
+      "apps_usuario_src_configuracion_preferences_userpreferences_constructor",
+      "apps_usuario_src_configuracion_preferences_userpreferences_get",
+      "apps_usuario_src_configuracion_preferences_userpreferences_read",
+      "apps_usuario_src_configuracion_preferences_userpreferences_set"
+    ],
+    "7": [
+      "apps_usuario_src_video_camera",
+      "apps_usuario_src_video_camera_cameracontroller",
+      "apps_usuario_src_video_camera_cameracontroller_active",
+      "apps_usuario_src_video_camera_cameracontroller_constructor",
+      "apps_usuario_src_video_camera_cameracontroller_start",
+      "apps_usuario_src_video_camera_cameracontroller_stop"
+    ],
+    "8": [
+      "apps_usuario_src_main_camera",
+      "apps_usuario_src_reconocimiento_recognizer_signrecognizer",
+      "apps_usuario_src_reconocimiento_recognizer_signrecognizer_constructor",
+      "apps_usuario_src_reconocimiento_recognizer_signrecognizer_process",
+      "apps_usuario_src_reconocimiento_recognizer_signrecognizer_reset"
+    ],
+    "9": [
+      "apps_usuario_src_vision_landmarks",
+      "apps_usuario_src_vision_landmarks_landmarkextractor",
+      "apps_usuario_src_vision_landmarks_landmarkextractor_constructor",
+      "apps_usuario_src_vision_landmarks_landmarkextractor_extract",
+      "apps_usuario_src_vision_landmarks_landmarkextractor_initialize"
+    ]
+  },
+  "cohesion": {
+    "0": 0.10276679841897234,
+    "1": 0.20512820512820512,
+    "2": 0.34545454545454546,
+    "3": 0.26666666666666666,
+    "4": 0.2777777777777778,
+    "5": 0.25,
+    "6": 0.4,
+    "7": 0.3333333333333333,
+    "8": 0.4,
+    "9": 0.4
+  },
+  "gods": [
+    {
+      "id": "apps_usuario_src_ui_interface_userinterface",
+      "label": "UserInterface",
+      "degree": 10
+    },
+    {
+      "id": "apps_usuario_src_reconocimiento_sequencebuffer_sequencebuffer",
+      "label": "SequenceBuffer",
+      "degree": 8
+    },
+    {
+      "id": "apps_usuario_src_vision_mediapipeadapter_mediapipeadapter",
+      "label": "MediaPipeAdapter",
+      "degree": 6
+    },
+    {
+      "id": "apps_usuario_src_configuracion_preferences_userpreferences",
+      "label": "UserPreferences",
+      "degree": 6
+    },
+    {
+      "id": "apps_usuario_src_video_camera_cameracontroller",
+      "label": "CameraController",
+      "degree": 6
+    },
+    {
+      "id": "apps_usuario_src_reconocimiento_recognizer_signrecognizer",
+      "label": "SignRecognizer",
+      "degree": 6
+    },
+    {
+      "id": "apps_usuario_src_reconocimiento_modelloader_modelloader",
+      "label": "ModelLoader",
+      "degree": 5
+    },
+    {
+      "id": "apps_usuario_src_traduccion_speech_speechservice",
+      "label": "SpeechService",
+      "degree": 4
+    },
+    {
+      "id": "apps_usuario_src_reconocimiento_inferenceadapter_inferenceadapter",
+      "label": "InferenceAdapter",
+      "degree": 4
+    },
+    {
+      "id": "apps_usuario_src_vision_landmarks_landmarkextractor",
+      "label": "LandmarkExtractor",
+      "degree": 4
+    }
+  ],
+  "surprises": [],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `SequenceBuffer` connect `SequenceBuffer` to `recognizer.js`?",
+      "why": "High betweenness centrality (0.096) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `UserInterface` connect `UI State Management` to `Core Application Services`?",
+      "why": "High betweenness centrality (0.096) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `preferences`, `speech`, `translator` to the rest of the system?",
+      "why": "12 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Core Application Services` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10276679841897234 - nodes in this community are weakly interconnected."
+    }
+  ]
+}

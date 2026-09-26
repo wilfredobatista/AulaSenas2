@@ -20,3 +20,6 @@ No debe modificar:
 - Documentación general.
 
 En esta etapa no debe ejecutar tareas, modificar archivos ni crear código. Solo debe comprender este objetivo y sus límites.
+
+## Documentacion de codigo 
+Todo código nuevo o modificado debe cumplir la norma de documentación definida en AGENTS.md y skills/comun.md.

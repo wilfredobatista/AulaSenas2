@@ -1,0 +1,21 @@
+/** Runtime aislado para el LayersModel F139/T20 stateless de FASE VI. */
+export const LITE_MODEL_BASE_PATH = '/models/exportados/gru_lite_f139_t20_tfjs';
+export const LITE_MODEL_SHAPE = Object.freeze([1, 20, 139]);
+export const LITE_MODEL_CLASSES = 12;
+
+/** Conserva el receptor requerido por el fetch nativo sin afectar fetchImpl inyectados. */
+const defaultFetch = (...args) => globalThis.fetch(...args);
+
+/** Carga metadata, mapping y LayersModel; no conserva estado recurrente. */
+export class LiteModelRuntime {
+  constructor({ tfRuntime = globalThis.tf, fetchImpl = defaultFetch, basePath = LITE_MODEL_BASE_PATH, onState = () => {} } = {}) { this.tf = tfRuntime; this.fetch = fetchImpl; this.basePath = basePath; this.onState = onState; this.model = null; this.metadata = null; this.classMapping = null; this.state = 'unloaded'; this.loading = null; }
+  get ready() { return this.state === 'ready' && Boolean(this.model); }
+  /** Inicia una única carga y publica estados cargando/listo/error. */
+  async load() { if (this.ready) return this; if (this.loading) return this.loading; this.loading = this.#load(); return this.loading; }
+  async #load() { this.state = 'loading'; this.onState(this.state); try { if (!this.tf?.loadLayersModel) throw new Error('TensorFlow.js LayersModel no está disponible.'); this.metadata = await this.#json('model_metadata.json'); this.classMapping = await this.#json('class_mapping.json'); validateArtifacts(this.metadata, this.classMapping); this.model = await this.tf.loadLayersModel(`${this.basePath}/model.json`); if (!Array.isArray(this.model.inputs?.[0]?.shape) || !sameShape(this.model.inputs[0].shape, [null,20,139])) throw new Error('El modelo cargado no declara entrada [null,20,139].'); this.state = 'ready'; this.onState(this.state); return this; } catch (error) { this.state = 'error'; this.onState(this.state, error); throw error; } }
+  /** Ejecuta una ventana completa y devuelve solo diagnóstico de Softmax. */
+  async predict(snapshot) { if (!this.ready) throw new Error('El modelo Lite todavía no está listo.'); if (!Array.isArray(snapshot) || snapshot.length !== 20 || snapshot.some((row) => !(row instanceof Float32Array) || row.length !== 139)) throw new TypeError('La inferencia Lite requiere [20,139].'); const flat = Float32Array.from(snapshot.flatMap((row) => Array.from(row))); const input = this.tf.tensor(flat, [1,20,139], 'float32'); let output = null; try { output = this.model.predict(input); if (Array.isArray(output) || !output?.data) throw new Error('El LayersModel no devolvió un tensor Softmax.'); if (!sameShape(output.shape, [1,12])) throw new Error('La salida Lite debe ser [1,12].'); const probabilities = Array.from(await output.data()); if (probabilities.length !== 12 || probabilities.some((value) => !Number.isFinite(value) || value < 0 || value > 1)) throw new Error('La salida Lite contiene probabilidades inválidas.'); const index = probabilities.reduce((best, value, current) => value > probabilities[best] ? current : best, 0); return Object.freeze({ probabilities: Object.freeze(probabilities), index, classId: this.classMapping.index_to_class[index], confidence: probabilities[index], background: index === 0 }); } finally { output?.dispose?.(); input.dispose?.(); } }
+  async #json(name) { const response = await this.fetch(`${this.basePath}/${name}`); if (!response.ok) throw new Error(`No se pudo cargar ${name} (${response.status}).`); return response.json(); }
+}
+function sameShape(actual, expected) { return Array.isArray(actual) && actual.length === expected.length && actual.every((value,index) => value === expected[index]); }
+function validateArtifacts(metadata, mapping) { if (metadata?.featureContract !== 'AULASENAS2_LITE_F139_V1' || metadata?.input?.shape?.[1] !== 20 || metadata?.input?.shape?.[2] !== 139 || metadata?.output?.shape?.[1] !== 12 || metadata?.gru?.stateful !== false) throw new Error('Metadata incompatible con el contrato Lite [20,139].'); const classes = mapping?.class_to_index; if (!classes || classes.ruido_background !== 0 || Object.keys(classes).length !== 12) throw new Error('Mapping Lite inválido: ruido_background debe ocupar índice 0 y existir 12 clases.'); const indexToClass = Object.fromEntries(Object.entries(classes).map(([classId,index]) => [index,classId])); mapping.index_to_class = indexToClass; }

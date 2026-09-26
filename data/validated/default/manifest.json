@@ -1,0 +1,58 @@
+{
+  "featureContract": "AULASENAS2_LITE_F139_V1",
+  "datasetId": "default",
+  "version": 326,
+  "stage": "validated",
+  "createdAt": "2026-09-25T00:48:31.907Z",
+  "updatedAt": "2026-09-25T03:01:45.079Z",
+  "clases": [
+    {
+      "classId": "BIEN",
+      "archivo": "clases/BIEN.json"
+    },
+    {
+      "classId": "BUENAS_NOCHES",
+      "archivo": "clases/BUENAS_NOCHES.json"
+    },
+    {
+      "classId": "BUENAS_TARDES",
+      "archivo": "clases/BUENAS_TARDES.json"
+    },
+    {
+      "classId": "BUENOS_DIAS",
+      "archivo": "clases/BUENOS_DIAS.json"
+    },
+    {
+      "classId": "COMO_ESTAS",
+      "archivo": "clases/COMO_ESTAS.json"
+    },
+    {
+      "classId": "CUAL_ES_TU_NOMBRE",
+      "archivo": "clases/CUAL_ES_TU_NOMBRE.json"
+    },
+    {
+      "classId": "GRACIAS",
+      "archivo": "clases/GRACIAS.json"
+    },
+    {
+      "classId": "HASTA_MANANA",
+      "archivo": "clases/HASTA_MANANA.json"
+    },
+    {
+      "classId": "LO_SIENTO",
+      "archivo": "clases/LO_SIENTO.json"
+    },
+    {
+      "classId": "MI_NOMBRE",
+      "archivo": "clases/MI_NOMBRE.json"
+    },
+    {
+      "classId": "PERMISO",
+      "archivo": "clases/PERMISO.json"
+    },
+    {
+      "classId": "ruido_background",
+      "archivo": "clases/ruido_background.json"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "dataset": {
+    "acceptedSampleCount": 90,
+    "classCount": 6,
+    "excludedSampleCount": 0,
+    "path": "data/validated/default",
+    "sourceSha256": {
+      "clases/ruido_background.json": "6fff5dad47651791cf3dca0e0e8c3b87e751886f1c808e60d1919bef19f9d67e",
+      "clases/u001.json": "37705a1ab33512e35303cdb987cee6322a3626ba9d5b98b3ab2ff1d705b72a6f",
+      "clases/u002.json": "183400047f1ec5d2b38ccd95db9dcdf197f13727a5ae755ec8cb47ee2e6c18e3",
+      "clases/u003.json": "bc2d7af3fd73dea1321ddddea6ff0dfbfc9d4f43f7b2bc2c5114989b657e068e",
+      "clases/u004.json": "d8148a081412e8a7aac4e7102b03147c85e3e97f43523aaacebb25780d7fadea",
+      "clases/u005.json": "dd37b1a06180da1ad4419efc2e7dc2dc5fc72d3fced1c030bed807907e6589f3",
+      "manifest.json": "ba7636f4462b97afa2b0fa085b746733a343093411ba1bd1fc6a8c0bf0f874cd"
+    },
+    "sourceUnchanged": true,
+    "totalFrames": 6298
+  },
+  "deltaMs": {
+    "max": 371.0,
+    "mean": 58.40032502381708,
+    "median": 33.32299999999668,
+    "min": 0.0,
+    "p95": 151.0
+  },
+  "diagnostics": {
+    "excludedSamples": [],
+    "framesWithoutValidTorso": 0,
+    "infinityCount": 0,
+    "nanCount": 0
+  },
+  "features": {
+    "F": 319,
+    "layout": {
+      "0:63": "leftHandXYZ",
+      "126:159": "poseXYZ",
+      "159:303": "faceXYZ",
+      "303:314": "poseVisibility",
+      "314": "leftHandPresence",
+      "315": "rightHandPresence",
+      "316": "posePresence",
+      "317": "facePresence",
+      "318": "deltaNorm",
+      "63:126": "rightHandXYZ"
+    },
+    "normalization": {
+      "epsilon": 1e-08,
+      "formula": "(point - shoulderMidpoint) / shoulderDistanceXY",
+      "invalidTorsoPolicy": "exclude complete sample",
+      "origin": "midpoint(pose[3], pose[4]) in XYZ",
+      "scale": "XY distance between pose[3] and pose[4]"
+    }
+  },
+  "split": {
+    "counts": {
+      "test": 12,
+      "train": 66,
+      "validation": 12
+    },
+    "countsByClass": {
+      "ruido_background": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      },
+      "u001": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      },
+      "u002": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      },
+      "u003": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      },
+      "u004": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      },
+      "u005": {
+        "test": 2,
+        "train": 11,
+        "validation": 2
+      }
+    },
+    "reproducible": true,
+    "seed": 42,
+    "uniqueSampleIds": true
+  },
+  "temporalLength": {
+    "byClass": {
+      "ruido_background": {
+        "max": 176.0,
+        "mean": 105.86666666666666,
+        "median": 101.0,
+        "min": 62.0,
+        "p75": 119.5,
+        "p90": 157.0,
+        "p95": 172.5
+      },
+      "u001": {
+        "max": 54.0,
+        "mean": 30.933333333333334,
+        "median": 30.0,
+        "min": 16.0,
+        "p75": 35.0,
+        "p90": 39.6,
+        "p95": 44.19999999999999
+      },
+      "u002": {
+        "max": 86.0,
+        "mean": 67.2,
+        "median": 66.0,
+        "min": 54.0,
+        "p75": 74.5,
+        "p90": 76.0,
+        "p95": 78.99999999999999
+      },
+      "u003": {
+        "max": 96.0,
+        "mean": 64.26666666666667,
+        "median": 62.0,
+        "min": 57.0,
+        "p75": 66.5,
+        "p90": 68.8,
+        "p95": 77.79999999999997
+      },
+      "u004": {
+        "max": 117.0,
+        "mean": 82.8,
+        "median": 78.0,
+        "min": 67.0,
+        "p75": 91.0,
+        "p90": 102.0,
+        "p95": 107.89999999999998
+      },
+      "u005": {
+        "max": 79.0,
+        "mean": 68.8,
+        "median": 69.0,
+        "min": 56.0,
+        "p75": 73.0,
+        "p90": 77.19999999999999,
+        "p95": 78.3
+      }
+    },
+    "global": {
+      "max": 176.0,
+      "mean": 69.97777777777777,
+      "median": 68.0,
+      "min": 16.0,
+      "p75": 78.0,
+      "p90": 101.30000000000003,
+      "p95": 113.84999999999998
+    }
+  },
+  "train02": {
+    "featureSource": "frame.observacion",
+    "paddingTruncationResampling": false,
+    "trainedModel": false,
+    "variableLength": true
+  },
+  "validations": {
+    "absentCoordinatesAreZero": true,
+    "allShapesTBy319": true,
+    "allTAtLeastOne": true,
+    "binaryMasks": true,
+    "deltaNormInRange": true,
+    "deterministicClassMapping": true,
+    "disjointSplits": true,
+    "finiteValues": true,
+    "nonNegativeDeltas": true,
+    "reproducibleSplit": true,
+    "sourceDatasetUnchanged": true,
+    "validTorsoForAcceptedFrames": true
+  }
+}

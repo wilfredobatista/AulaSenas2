@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/lite-point.schema.json",
+  "title": "Punto raw Lite",
+  "description": "Landmark observado por Hands o Pose. Los validadores JavaScript rechazan NaN e Infinity como números no finitos.",
+  "type": "object",
+  "required": ["x", "y", "z"],
+  "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" }, "visibility": { "type": "number", "minimum": 0, "maximum": 1 } },
+  "additionalProperties": false
+}

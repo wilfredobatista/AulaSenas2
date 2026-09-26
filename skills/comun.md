@@ -19,3 +19,7 @@
 ## Regla de ejecución
 
 Ningún Work debe ejecutar tareas, modificar archivos, crear código, instalar dependencias, hacer commits o realizar push sin recibir una orden específica para hacerlo.
+
+
+## Documentacion de codigo 
+“todo código debe quedar documentado según AGENTS.md”.

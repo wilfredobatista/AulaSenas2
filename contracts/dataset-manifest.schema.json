@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/dataset-manifest.schema.json",
+  "title": "Manifest del dataset AulaSenas2-Lite",
+  "description": "Índice del dataset validado F139. No representa clases con uNNN ni formatos de características legacy.",
+  "type": "object",
+  "required": ["featureContract", "datasetId", "version", "stage", "createdAt", "updatedAt", "clases"],
+  "properties": {
+    "featureContract": { "const": "AULASENAS2_LITE_F139_V1" },
+    "datasetId": { "type": "string", "minLength": 1 },
+    "version": { "type": "integer", "minimum": 1 },
+    "stage": { "const": "validated" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" },
+    "clases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["classId", "archivo"],
+        "properties": {
+          "classId": { "oneOf": [{ "$ref": "sign-class.schema.json#/$defs/classIdNormal" }, { "const": "ruido_background" }] },
+          "archivo": { "type": "string", "pattern": "^clases/(?:[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*|ruido_background)\\.json$" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "x-aulasenas-invariants": ["classId y archivo son únicos", "Cada archivo referido satisface dataset-class.schema.json y su clase.classId coincide con el manifest."]
+}

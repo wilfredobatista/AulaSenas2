@@ -59,7 +59,7 @@ Se preserva la clase técnica `ruido_background`, con índice 0, para reposo, mo
 
 ## 8. FIFO y paridad Training–Producción
 
-Usuario conservará un FIFO continuo de `T=128` y `F=139`, shape `[128,139]`. No se limpia después de cada clasificación: cada observación válida se añade y se conservan las últimas 128 posiciones. No existe segmentación manual como requisito del usuario final.
+Usuario conserva un FIFO continuo de `T=20` y `F=139`, shape `[20,139]`, conforme al modelo LayersModel Lite vigente. No se limpia después de cada clasificación: cada observación válida se añade y se conservan las últimas 20 posiciones. No existe segmentación manual como requisito del usuario final.
 
 Training debe diseñarse para el régimen temporal continuo de Usuario. No se asumirá que una seña aislada con padding equivale a una ventana FIFO continua con reposo y transiciones. FASE V incluirá explícitamente `ruido_background` y tensores compatibles con producción.
 
@@ -87,11 +87,11 @@ Generar el dataset real nuevo con Configurador Lite.
 
 ### FASE V — Training/Colab nuevo
 
-Crear desde cero el pipeline F139, T128, GRU unidireccional, Softmax y Masking, compatible con FIFO continuo y background.
+Crear desde cero el pipeline F139, T20, GRU stateless, Softmax y Masking, compatible con FIFO continuo y background.
 
 ### FASE VI — Integración y prueba física
 
-Exportar e integrar el nuevo modelo en `models/exportados/`, conectarlo al runtime Usuario Lite y realizar la prueba física. Si falla, se audita la evidencia del pipeline; si funciona, se certifica la arquitectura Lite.
+Exportar e integrar el nuevo modelo en `models/exportados/`, conectarlo al runtime Usuario Lite y realizar la prueba física. El modelo `gru_lite_f139_t20_tfjs` ya está integrado; queda pendiente la prueba física. Si falla, se audita la evidencia del pipeline; si funciona, se certifica la arquitectura Lite.
 
 ## 11. Cancelaciones e historial
 
@@ -99,4 +99,4 @@ Quedan formalmente cancelados `USR-06.7`, nuevas optimizaciones incrementales de
 
 ## 12. Estado de esta tarea
 
-Este commit es documental. No elimina todavía Holistic, no modifica Configurador, Usuario, datasets ni modelos, y no implementa F139. La FASE I no comienza con este contrato.
+FASE I ya está implementada y validada físicamente en Configurador: cámara y video producen raw Lite y F139 con Hands + Pose. FASE II formaliza esos datos en `contracts/` y la documentación. FASE III reconstruyó Usuario con el pipeline físico Lite. FASE VI integró el LayersModel stateless `gru_lite_f139_t20_tfjs`; la prueba física final permanece pendiente.

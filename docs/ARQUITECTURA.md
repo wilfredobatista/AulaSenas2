@@ -1,88 +1,46 @@
-# Arquitectura de AulaSenas2
+# Arquitectura AulaSenas2-Lite
+
+## Estado vigente
+
+La única representación formal vigente es `AULASENAS2_LITE_F139_V1`. `contracts/` define esa representación; no contiene implementación de cámara ni entrenamiento.
+
+```text
+Configurador (implementado)
+  cámara / video
+  → Hands + Pose Lite
+  → raw Lite
+  → vector F139
+  → validación contractual
+  → data/validated/<dataset>/
+```
+
+`raw Lite` conserva manos izquierda y derecha (21 puntos XYZ cuando están presentes) y pose mínima: nariz, hombro izquierdo y hombro derecho. El vector F139 se deriva con centro en el punto medio de hombros, escala de distancia XY entre hombros y epsilon `1e-6`. Sus últimos valores son `presenceLeft`, `presenceRight`, `presencePose` y `deltaMsNorm`.
+
+Las muestras son secuencias de longitud variable. El Configurador no interpola observaciones, no crea filas cero ni impone una duración, FPS o tensor de modelo.
+
+## Datos y contratos
+
+```text
+data/validated/<dataset>/manifest.json
+└─ clases/<classId>.json
+```
+
+El manifest y cada archivo de clase declaran `featureContract: "AULASENAS2_LITE_F139_V1"`. Las clases normales usan IDs humanos en mayúsculas separados por `_`; `ruido_background` es la única excepción reservada. `data/` contiene únicamente archivos de datos; el código de lectura y escritura vive en `apps/configurador/src/almacenamiento/` y su servicio local.
+
+## Separación de aplicaciones
+
+`apps/configurador/` y `apps/usuario/` son independientes y no importan lógica funcional entre sí. Configurador implementa la captura Lite actual. Usuario implementa el runtime físico Hands + Pose → F139 → FIFO continuo `[20,139]`, con overlay, métricas y el LayersModel stateless autorizado de FASE VI.
+
+Training permanece fuera de las aplicaciones. En FASE V consumirá el dataset Lite y producirá un modelo GRU Softmax. No hay un pipeline de entrenamiento vigente descrito como implementado en este documento.
 
 ## Estructura
 
 ```text
-AulaSenas2/
-├─ apps/
-│  ├─ usuario/
-│  │  ├─ index.html
-│  │  ├─ package.json
-│  │  ├─ src/
-│  │  │  ├─ video/
-│  │  │  ├─ vision/
-│  │  │  ├─ reconocimiento/
-│  │  │  ├─ traduccion/
-│  │  │  ├─ configuracion/
-│  │  │  └─ ui/
-│  │  └─ tests/
-│  └─ configurador/
-│     ├─ index.html
-│     ├─ package.json
-│     ├─ src/
-│     │  ├─ video/
-│     │  ├─ vision/
-│     │  ├─ captura/
-│     │  ├─ etiquetado/
-│     │  ├─ validacion/
-│     │  ├─ almacenamiento/
-│     │  └─ ui/
-│     └─ tests/
-├─ contracts/
-├─ data/
-│  ├─ raw/
-│  ├─ processed/
-│  └─ validated/
-├─ training/
-│  ├─ scripts/
-│  ├─ notebooks/
-│  ├─ configuracion/
-│  ├─ resultados/
-│  ├─ tests/
-│  └─ requirements.txt
-├─ models/
-│  └─ exportados/
-├─ docs/
-├─ AGENTS.md
-├─ ordenes-agente/
-├─ README.md
-└─ .gitignore
+apps/configurador/  captura, validación y almacenamiento administrativo
+apps/usuario/       aplicación pública Lite: cámara, Hands/Pose, F139, FIFO T20, métricas y modelo LayersModel
+contracts/          JSON Schema y formatos AULASENAS2-Lite
+data/               archivos de dataset
+training/           herramientas offline, pendiente de FASE V
+models/exportados/  modelos finales para Usuario
+docs/               normativa y arquitectura
 ```
-
-## Aplicación Usuario
-
-Es la aplicación pública. Su flujo es:
-
-```text
-Cámara → MediaPipe → landmarks → GRU/CTC → texto → interpretación → voz
-```
-
-No captura muestras ni ejecuta entrenamiento.
-
-## Aplicación Configurador
-
-Es la aplicación administrativa. Su flujo es:
-
-```text
-Cámara/video → MediaPipe → landmarks → etiquetado → validación → data/
-```
-
-El código de almacenamiento está en `apps/configurador/src/almacenamiento/`; los archivos generados están en `data/`.
-
-## Entrenamiento
-
-`training/` trabaja fuera de las aplicaciones web:
-
-```text
-data/validated/ → scripts de entrenamiento → métricas → models/exportados/
-```
-
-El modelo exportado se incorpora a la aplicación Usuario.
-
-## Contratos
-
-`contracts/` define únicamente el formato que deben respetar los datos, por ejemplo frames, muestras y datasets. No contiene código de cámara, MediaPipe, captura ni entrenamiento.
-
-## Separación
-
-Usuario y Configurador son aplicaciones independientes. No importan lógica entre sí. Cada una implementa sus propias dependencias funcionales y solo debe respetar los contratos de datos establecidos.

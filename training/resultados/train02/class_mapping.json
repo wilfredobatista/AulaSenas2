@@ -1,0 +1,19 @@
+{
+  "classIdToClassIndex": {
+    "ruido_background": 0,
+    "u001": 1,
+    "u002": 2,
+    "u003": 3,
+    "u004": 4,
+    "u005": 5
+  },
+  "classIndexToClassId": {
+    "0": "ruido_background",
+    "1": "u001",
+    "2": "u002",
+    "3": "u003",
+    "4": "u004",
+    "5": "u005"
+  },
+  "rule": "classId lexicográfico ascendente"
+}

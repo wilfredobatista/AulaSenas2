@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/lite-hand.schema.json",
+  "title": "Mano raw Lite",
+  "description": "Una mano es null cuando no fue observada o un arreglo de exactamente 21 landmarks Hands en orden nativo.",
+  "oneOf": [{ "type": "null" }, { "type": "array", "minItems": 21, "maxItems": 21, "items": { "$ref": "lite-point.schema.json" } }]
+}

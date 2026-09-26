@@ -1,0 +1,134 @@
+{
+  ".codex/hooks.json": {
+    "mtime": 1789181930.8746965,
+    "seen": 1789181952.2879605,
+    "ast_hash": "ec185bd2ce0f4c2cda74ac2dbfa357d5",
+    "semantic_hash": "ec185bd2ce0f4c2cda74ac2dbfa357d5"
+  },
+  "apps/configurador/package.json": {
+    "mtime": 1789175146.422793,
+    "seen": 1789181952.2879837,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "apps/usuario/package.json": {
+    "mtime": 1789181653.687682,
+    "seen": 1789181952.2879927,
+    "ast_hash": "4f18ad73de7fe941836d96f0c60b1847",
+    "semantic_hash": "4f18ad73de7fe941836d96f0c60b1847"
+  },
+  "apps/usuario/src/configuracion/preferences.js": {
+    "mtime": 1789177545.0425606,
+    "seen": 1789181952.2879994,
+    "ast_hash": "8fe6240e63519f3256dd807f55f2d8a1",
+    "semantic_hash": "8fe6240e63519f3256dd807f55f2d8a1"
+  },
+  "apps/usuario/src/main.js": {
+    "mtime": 1789181620.44858,
+    "seen": 1789181952.288007,
+    "ast_hash": "eeb86d2f3792dff991e02d6d230f3536",
+    "semantic_hash": "eeb86d2f3792dff991e02d6d230f3536"
+  },
+  "apps/usuario/src/reconocimiento/confidence.js": {
+    "mtime": 1789181555.6430192,
+    "seen": 1789181952.2880132,
+    "ast_hash": "4a882605c9e23140f0b1e9174f7a81ec",
+    "semantic_hash": "4a882605c9e23140f0b1e9174f7a81ec"
+  },
+  "apps/usuario/src/reconocimiento/ctcDecoder.js": {
+    "mtime": 1789181552.503888,
+    "seen": 1789181952.2880201,
+    "ast_hash": "cc11de563f7d38b982685e3b80e22c6a",
+    "semantic_hash": "cc11de563f7d38b982685e3b80e22c6a"
+  },
+  "apps/usuario/src/reconocimiento/inferenceAdapter.js": {
+    "mtime": 1789181561.2925742,
+    "seen": 1789181952.2880259,
+    "ast_hash": "00d7b94a7aa5ab5e29b562197eb36ed2",
+    "semantic_hash": "00d7b94a7aa5ab5e29b562197eb36ed2"
+  },
+  "apps/usuario/src/reconocimiento/inputShape.js": {
+    "mtime": 1789181548.5981233,
+    "seen": 1789181952.2880325,
+    "ast_hash": "f849cd0bed62162f3656ad73e3b24e3d",
+    "semantic_hash": "f849cd0bed62162f3656ad73e3b24e3d"
+  },
+  "apps/usuario/src/reconocimiento/modelLoader.js": {
+    "mtime": 1789181558.4157531,
+    "seen": 1789181952.2880385,
+    "ast_hash": "0dc5c83571456bd321f65d5a6177a791",
+    "semantic_hash": "0dc5c83571456bd321f65d5a6177a791"
+  },
+  "apps/usuario/src/reconocimiento/recognizer.js": {
+    "mtime": 1789181650.6317198,
+    "seen": 1789181952.2880442,
+    "ast_hash": "057de7071a63d50f930d0704555e20de",
+    "semantic_hash": "057de7071a63d50f930d0704555e20de"
+  },
+  "apps/usuario/src/reconocimiento/sequenceBuffer.js": {
+    "mtime": 1789181542.7663229,
+    "seen": 1789181952.2880523,
+    "ast_hash": "34d41e6f003c25b90e9def28c3cde43c",
+    "semantic_hash": "34d41e6f003c25b90e9def28c3cde43c"
+  },
+  "apps/usuario/src/traduccion/speech.js": {
+    "mtime": 1789177541.5596533,
+    "seen": 1789181952.2880578,
+    "ast_hash": "e37f2d4cc3f5e6dad50649e3a4e1c8d0",
+    "semantic_hash": "e37f2d4cc3f5e6dad50649e3a4e1c8d0"
+  },
+  "apps/usuario/src/traduccion/translator.js": {
+    "mtime": 1789177538.0586214,
+    "seen": 1789181952.2880647,
+    "ast_hash": "90ce81c0be492298f3a379c1dd4e2e01",
+    "semantic_hash": "90ce81c0be492298f3a379c1dd4e2e01"
+  },
+  "apps/usuario/src/ui/interface.js": {
+    "mtime": 1789181624.5046537,
+    "seen": 1789181952.28807,
+    "ast_hash": "b0d13c866c57ececa3ba4305b4e8f165",
+    "semantic_hash": "b0d13c866c57ececa3ba4305b4e8f165"
+  },
+  "apps/usuario/src/video/camera.js": {
+    "mtime": 1789178240.8505921,
+    "seen": 1789181952.2880752,
+    "ast_hash": "642b4c4efdfc1311b92a36e830be2535",
+    "semantic_hash": "642b4c4efdfc1311b92a36e830be2535"
+  },
+  "apps/usuario/src/vision/landmarks.js": {
+    "mtime": 1789178247.7757032,
+    "seen": 1789181952.2880805,
+    "ast_hash": "a7283e3d11f93c77948ebc88aea76457",
+    "semantic_hash": "a7283e3d11f93c77948ebc88aea76457"
+  },
+  "apps/usuario/src/vision/mediapipeAdapter.js": {
+    "mtime": 1789181574.4049034,
+    "seen": 1789181952.2880862,
+    "ast_hash": "621d006853310467db7e1762f515b909",
+    "semantic_hash": "621d006853310467db7e1762f515b909"
+  },
+  "apps/usuario/src/vision/normalizer.js": {
+    "mtime": 1789181564.4705815,
+    "seen": 1789181952.288092,
+    "ast_hash": "1a83bbd7800aa26f2124fd3a79012e3c",
+    "semantic_hash": "1a83bbd7800aa26f2124fd3a79012e3c"
+  },
+  "apps/usuario/tests/ctcDecoder.test.js": {
+    "mtime": 1789181671.0387688,
+    "seen": 1789181952.2880974,
+    "ast_hash": "ba1e3aa8352a947ab896528c8b6f1606",
+    "semantic_hash": "ba1e3aa8352a947ab896528c8b6f1606"
+  },
+  "apps/usuario/tests/inputShape.test.js": {
+    "mtime": 1789181660.8264916,
+    "seen": 1789181952.2881024,
+    "ast_hash": "f53f8397716b7d4cd678b9280e6a18f7",
+    "semantic_hash": "f53f8397716b7d4cd678b9280e6a18f7"
+  },
+  "apps/usuario/tests/sequenceBuffer.test.js": {
+    "mtime": 1789181656.6603646,
+    "seen": 1789181952.2881072,
+    "ast_hash": "d5b520cd21781f760d2d499fbf9296e8",
+    "semantic_hash": "d5b520cd21781f760d2d499fbf9296e8"
+  }
+}

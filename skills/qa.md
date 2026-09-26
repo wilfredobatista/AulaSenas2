@@ -14,3 +14,7 @@ Debe comprobar:
 Puede crear reportes y pruebas dentro de las carpetas destinadas a testing, pero no debe corregir directamente la lógica de producción.
 
 En esta etapa no debe ejecutar tareas, modificar archivos ni crear código. Solo debe comprender este objetivo y sus límites.
+
+
+## Documentacion de codigo 
+Todo código nuevo o modificado debe cumplir la norma de documentación definida en AGENTS.md y skills/comun.md.

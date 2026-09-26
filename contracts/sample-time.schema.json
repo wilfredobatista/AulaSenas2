@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aulasenas2.local/contracts/sample-time.schema.json",
+  "title": "Tiempo de muestra Lite",
+  "description": "Cronología real de longitud variable. No impone FPS, padding, resampling ni duración de modelo.",
+  "type": "object",
+  "required": ["inicioMs", "finMs", "duracionMs", "cantidadFrames"],
+  "properties": { "inicioMs": { "const": 0 }, "finMs": { "type": "number", "minimum": 0 }, "duracionMs": { "type": "number", "minimum": 0 }, "cantidadFrames": { "type": "integer", "minimum": 1 } },
+  "additionalProperties": false,
+  "x-aulasenas-invariants": ["duracionMs === finMs - inicioMs", "cantidadFrames === frames.length"]
+}
